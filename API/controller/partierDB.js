@@ -76,7 +76,8 @@ module.exports.postPartier = async (req, res) => {
 
 module.exports.updatePartier = async (req, res) => {
     const client = await pool.connect();
-    const { emailAddress,
+    const {id,
+        emailAddress,
         pseudo,
         password,
         firstName,
@@ -89,6 +90,7 @@ module.exports.updatePartier = async (req, res) => {
 
     try {
         await PartierModel.updatePartier(  
+            id,
             emailAddress,          
             pseudo,
             password,
