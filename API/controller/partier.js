@@ -125,7 +125,6 @@ module.exports.registerPartier = async (req, res) => {
     } finally {
         client.release();
     }
-
 }
 
 module.exports.postPartier = async (req, res) => {
@@ -184,7 +183,8 @@ module.exports.updateAddress = async (req, res) => {
 
 module.exports.updatePartier = async (req, res) => {
     const client = await pool.connect();
-    const { emailAddress,
+    const { id,
+        emailAddress,
         pseudo,
         password,
         firstName,
@@ -196,7 +196,8 @@ module.exports.updatePartier = async (req, res) => {
         addressZipCode} = req.body;
 
     try {
-        await PartierModel.updatePartier(  
+        await PartierModel.updatePartier(
+            id,
             emailAddress,          
             pseudo,
             password,
@@ -218,10 +219,10 @@ module.exports.updatePartier = async (req, res) => {
 
 module.exports.deletePartier = async (req, res) => {
     const client = await pool.connect();
-    const {emailAddress} = req.body;
+    const id = req.params.id;
 
     try {
-        await PartierModel.deletePartier(emailAddress, client);
+        await PartierModel.deletePartier(id, client);
         res.sendStatus(204);
     } catch (error) {
         console.error(error);
@@ -253,3 +254,22 @@ module.exports.emailExist = async (req, res) => {
     }
 }
 
+module.exports.emailExists = async (req, res) => {
+    const client = await pool.connect();
+    const {id, email} = req.params;
+
+    try {
+        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
+
+        if (partiers[0] !== undefined) {
+            res.json({exists: false});
+        } else {
+            res.json({exists: partiers[0].id !== id});
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}

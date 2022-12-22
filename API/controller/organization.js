@@ -64,6 +64,26 @@ module.exports.getOrganizationByEmail = async (req, res) => {
     }
 }
 
+module.exports.nameExists = async (req, res) => {
+    const client = await pool.connect();
+    const {id, name} = req.params;
+
+    try {
+        const {rows: organizations} = await OrganizationModel.getOrganizationByName(name, client);
+
+        if (organizations[0] !== undefined) {
+            res.json({exists: false});
+        } else {
+            res.json({exists: organizations[0].id !== id});
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.postOrganization = async (req, res) => {
     const client = await pool.connect();
     const {emailAddress, password, name, responsibleName, referencePhoneNumber, administrativeProof} = req.body;

@@ -3,13 +3,14 @@ const Router = require("express-promise-router");
 const router = new Router;
 
 router.get('/all', PartierController.getPartiers);
+router.post('/emailExists', PartierController.emailExists);
 router.get('/getPartier/:id', PartierController.getPartier);
 router.get('/:email', PartierController.getPartierByEmail);
-router.post('/emailExist', PartierController.emailExist);
 router.post('/', PartierController.postPartier);
-router.patch('/updateAddress', PartierController.updateAddress)
+router.post('/emailExist', PartierController.emailExist);
 router.patch('/', PartierController.updatePartier);
-router.delete('/', PartierController.deletePartier);
+router.patch('/updateAddress', PartierController.updateAddress)
+router.delete('/:id', PartierController.deletePartier);
 
 const multer = require('multer');
 const storage = multer.memoryStorage();

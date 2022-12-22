@@ -4,7 +4,7 @@ const router = new Router;
 
 router.get('/getOrga/:id', OrganizationController.getOrganization);
 router.get('/all', OrganizationController.getOrganizations);
-router.get('/nameExists', OrganizationController.nameAlreadyExists);
+router.get('/nameExists/:name', OrganizationController.nameExists);
 router.get('/:email', OrganizationController.getOrganizationByEmail);
 router.post('/', OrganizationController.postOrganization);
 router.post('/emailExist', OrganizationController.emailExist);
