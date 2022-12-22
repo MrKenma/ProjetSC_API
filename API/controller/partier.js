@@ -2,6 +2,26 @@ const pool = require('../model/database');
 const PartierModel = require('../model/partier');
 const ImageModel = require('../model/image');
 
+module.exports.getPartier = async (req, res) => {
+    const client = await pool.connect();
+    const id = req.params.id;
+
+    try {
+        const {rows: partiers} = await PartierModel.getPartier(id, client);
+        const partier = partiers[0];
+        if (partier !== undefined) {
+            res.json(partier);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.getPartierByEmail = async (req, res) => {
     const client = await pool.connect();
     const email = req.params.email;

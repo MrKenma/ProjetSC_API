@@ -2,9 +2,14 @@ const OrganizationController = require("../controller/organization");
 const Router = require("express-promise-router");
 const router = new Router;
 
+router.get('/getOrga/:id', OrganizationController.getOrganization);
 router.get('/all', OrganizationController.getOrganizations);
-router.post('/emailExist', OrganizationController.emailExist);
+router.get('/nameExists', OrganizationController.nameAlreadyExists);
 router.get('/:email', OrganizationController.getOrganizationByEmail);
+router.post('/', OrganizationController.postOrganization);
+router.post('/emailExist', OrganizationController.emailExist);
+router.patch('/', OrganizationController.updateOrganization);
+router.delete('/:id', OrganizationController.deleteOrganization);
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -25,10 +30,5 @@ router.post('/register', upload.fields([
     {name : 'phoneNumber', maxCount : 1},
     {name : 'administrativeProof', maxCount : 1}
 ]) , OrganizationController.registerOrganization);
-
-/* router.get('/:id', OrganizationController.getOrganization);
-router.post('/', OrganizationController.postOrganization);
-router.patch('/', OrganizationController.updateOrganization);
-router.delete('/:id', OrganizationController.deleteOrganization); */
 
 module.exports = router;

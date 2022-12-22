@@ -26,16 +26,12 @@ module.exports.getOrganizations = async (req, res) => {
     const client = await pool.connect();
 
     try {
-
         const {rows: organizations} = await OrganizationModel.getOrganizations(client);
-
-        if (organizations == undefined) {
+        if (organizations !== undefined) {
+            res.json(organizations);
+        } else {
             res.sendStatus(404);
-            return;
         }
-
-        res.json(organizations);
-        
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -155,7 +151,6 @@ module.exports.registerOrganization = async (req, res) => {
         console.log(error);
         res.sendStatus(500);
     });
-
     
 
     try {

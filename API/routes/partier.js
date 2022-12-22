@@ -3,8 +3,13 @@ const Router = require("express-promise-router");
 const router = new Router;
 
 router.get('/all', PartierController.getPartiers);
-router.post('/emailExist', PartierController.emailExist);
+router.get('/getPartier/:id', PartierController.getPartier);
 router.get('/:email', PartierController.getPartierByEmail);
+router.post('/emailExist', PartierController.emailExist);
+router.post('/', PartierController.postPartier);
+router.patch('/updateAddress', PartierController.updateAddress)
+router.patch('/', PartierController.updatePartier);
+router.delete('/', PartierController.deletePartier);
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -30,15 +35,5 @@ router.post('/register', upload.fields([
     {name: 'addressZipCode', maxCount: 1}
 ]), PartierController.registerPartier);
 
-router.post('/', PartierController.postPartier);
-
-router.patch('/updateAddress', PartierController.updateAddress)
-
-/*
-
-router.patch('/', PartierController.updatePartier);
-router.delete('/', PartierController.deletePartier); 
-
-*/
 
 module.exports = router;

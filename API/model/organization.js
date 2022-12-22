@@ -13,20 +13,6 @@ module.exports.getOrganizationByEmail = async (email, client) => {
     return await client.query(`SELECT * FROM organization WHERE email = $1`, [email]);
 }
 
-// Get des responsible names uniques
-/*
-module.exports.getUniquesResponsiblesNames = async (client) => {
-    return await client.query("SELECT DISTINCT responsibleName FROM organization");
-}
-*/
-
-// Get des organisations par responsable
-/*
-module.exports.getOrganizationsByResponsibleName = async (client, responsibleName) => {
-    return await client.query("SELECT * FROM organization WHERE responsibleName = $1", [responsibleName]);
-}
-*/
-
 module.exports.postOrganization = async (emailAddress, password, name, responsibleName, referencePhoneNumber, isVerified, client) => {
     return await client.query(`INSERT INTO organization (emailaddress, password, name, responsiblename, referencephonenumber, isVerified) 
         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [emailAddress, password, name, responsibleName, referencePhoneNumber, isVerified]);

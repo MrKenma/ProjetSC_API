@@ -5,7 +5,6 @@ module.exports.getTowns = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        
         const {rows: towns} = await TownModel.getTowns(client);
 
         if (towns === undefined) {
