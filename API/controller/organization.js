@@ -86,10 +86,10 @@ module.exports.nameExists = async (req, res) => {
 
 module.exports.postOrganization = async (req, res) => {
     const client = await pool.connect();
-    const {emailAddress, password, name, responsibleName, referencePhoneNumber, administrativeProof} = req.body;
+    const {email, password, name, responsibleName, referencePhoneNumber, administrativeProof} = req.body;
 
     try {
-        await OrganizationModel.postOrganization(emailAddress, password, name, responsibleName, referencePhoneNumber, administrativeProof, client);
+        await OrganizationModel.postOrganization(email, password, name, responsibleName, referencePhoneNumber, administrativeProof, client);
         res.sendStatus(201);
     } catch (error) {
         console.error(error);
@@ -101,10 +101,10 @@ module.exports.postOrganization = async (req, res) => {
 
 module.exports.updateOrganization = async (req, res) => {
     const client = await pool.connect();
-    const {id, emailAddress, password, name, responsibleName, referencePhoneNumber, administrativeProof} = req.body;
+    const {id, email, password, name, responsibleName, referencePhoneNumber, administrativeProof} = req.body;
 
     try {
-        await OrganizationModel.updateOrganization(id, emailAddress, password, name, responsibleName, referencePhoneNumber, administrativeProof, client);
+        await OrganizationModel.updateOrganization(id, email, password, name, responsibleName, referencePhoneNumber, administrativeProof, client);
         res.sendStatus(204);
     } catch (error) {
         console.error(error);

@@ -37,6 +37,7 @@ CREATE TABLE partier (
     hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
     phoneNumber varchar NOT NULL,
     refPhoneNumber varchar,
+    isAdmin boolean NOT NULL DEFAULT false,
     addressTown varchar,
     addressZipCode integer,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
@@ -114,11 +115,11 @@ INSERT INTO town ("name", zipCode) VALUES
 ('Loyers', 5101);
 
 -- Partier
-INSERT INTO partier (email, pseudo, password, firstName, lastName, hasUploadedProfilePicture, phoneNumber, refPhoneNumber, addressTown, addressZipCode) VALUES
-('etu44721@henallux.be', 'Wan', 'password', 'Wangi', 'Weber', false, '0499517092', '0499265087', 'Saint-Servais', 5002),
-('etu44108@henallux.be', 'Sim', 'password', 'Simon', 'Rollus', false, '0499172696', '0499585449', 'Malonne', 5020),
-('etu47233@henallux.be', 'MrKenma', 'password', 'Julien', 'Hanquet', false, '0499579465', '0499164954', 'Wierde', 5100),
-('fhmqez@gmail.com', 'Pseudo', 'password', 'Prénom', 'Nom', false, '0499270747', null, 'Loyers', 5101);
+INSERT INTO partier (email, pseudo, password, firstName, lastName, hasUploadedProfilePicture, phoneNumber, refPhoneNumber,isAdmin, addressTown, addressZipCode) VALUES
+('etu44721@henallux.be', 'Wan', 'password', 'Wangi', 'Weber', false, '0499517092', '0499265087',true, 'Saint-Servais', 5002),
+('etu44108@henallux.be', 'Sim', 'password', 'Simon', 'Rollus', false, '0499172696', '0499585449',false, 'Malonne', 5020),
+('etu47233@henallux.be', 'MrKenma', 'password', 'Julien', 'Hanquet', false, '0499579465', '0499164954',false, 'Wierde', 5100),
+('fhmqez@gmail.com', 'Pseudo', 'password', 'Prénom', 'Nom', false, '0499270747', null,true, 'Loyers', 5101);
 
 -- Event
 INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES

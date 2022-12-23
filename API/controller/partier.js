@@ -66,6 +66,30 @@ module.exports.getPartiers = async (req, res) => {
     }
 }
 
+module.exports.getPartierByEmail = async (req, res) => {
+    const client = await pool.connect();
+    const email = req.params.email;
+
+    try {
+        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
+
+        const partier = partiers[0];
+
+        if (partier === undefined) {
+            res.json({id : -1})
+            return;
+        }
+
+        res.json(partier);
+       
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.registerPartier = async (req, res) => {
     const client = await pool.connect();
     const profilePicture = req.files.profilePicture ? req.files.profilePicture[0] : undefined;
@@ -76,6 +100,7 @@ module.exports.registerPartier = async (req, res) => {
            lastName,
            phoneNumber,
            refPhoneNumber,
+           isAdmin,
            addressTown,
            addressZipCode} = req.body;
 
@@ -86,6 +111,7 @@ module.exports.registerPartier = async (req, res) => {
         || lastName === undefined 
         || phoneNumber === undefined 
         || refPhoneNumber === undefined 
+        || isAdmin ===undefined
         || addressTown === undefined 
         || addressZipCode === undefined) {
         res.sendStatus(400);
@@ -115,6 +141,7 @@ module.exports.registerPartier = async (req, res) => {
                                        hasUploadedProfilePicture,
                                        phoneNumber,
                                        refPhoneNumber,
+                                       isAdmin,
                                        addressTown,
                                        addressZipCode,
                                        client);
@@ -129,7 +156,7 @@ module.exports.registerPartier = async (req, res) => {
 
 module.exports.postPartier = async (req, res) => {
     const client = await pool.connect();
-    const {emailAddress,
+    const {email,
         pseudo,
         password,
         firstName,
@@ -137,11 +164,12 @@ module.exports.postPartier = async (req, res) => {
         picture,
         phoneNumber,
         refPhoneNumber,
+        isAdmin,
         addressTown,
         addressZipCode} = req.body;
 
     try {
-        await PartierModel.postPartier(emailAddress,
+        await PartierModel.postPartier(email,
             pseudo,
             password,
             firstName,
@@ -149,6 +177,7 @@ module.exports.postPartier = async (req, res) => {
             picture,
             phoneNumber,
             refPhoneNumber,
+            isAdmin,
             addressTown,
             addressZipCode,
             client);
@@ -184,7 +213,7 @@ module.exports.updateAddress = async (req, res) => {
 module.exports.updatePartier = async (req, res) => {
     const client = await pool.connect();
     const { id,
-        emailAddress,
+        email,
         pseudo,
         password,
         firstName,
@@ -192,13 +221,14 @@ module.exports.updatePartier = async (req, res) => {
         picture,
         phoneNumber,
         refPhoneNumber,
+        isAdmin,
         addressTown,
         addressZipCode} = req.body;
 
     try {
         await PartierModel.updatePartier(
             id,
-            emailAddress,          
+            email,          
             pseudo,
             password,
             firstName,
@@ -206,6 +236,7 @@ module.exports.updatePartier = async (req, res) => {
             picture,
             phoneNumber,
             refPhoneNumber,
+            isAdmin,
             addressTown,
             addressZipCode, client);
         res.sendStatus(204);
@@ -232,20 +263,18 @@ module.exports.deletePartier = async (req, res) => {
     }
 }
 
-module.exports.emailExist = async (req, res) => {
+module.exports.emailExists = async (req, res) => {
     const client = await pool.connect();
-    const {email} = req.body;
+    const {id, email} = req.params;
 
     try {
-        const emailExist = await PartierModel.emailExist(email, client);
-    
-        if (emailExist === undefined) {
-            res.sendStatus(404);
-            return;
+        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
+
+        if (partiers[0] !== undefined) {
+            res.json({exists: false});
+        } else {
+            res.json({exists: partiers[0].id !== id});
         }
-
-        res.json(emailExist);
-
     } catch (error) {
         console.error(error);
         res.sendStatus(500);

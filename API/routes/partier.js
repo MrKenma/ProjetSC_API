@@ -7,7 +7,7 @@ router.post('/emailExists', PartierController.emailExists);
 router.get('/getPartier/:id', PartierController.getPartier);
 router.get('/:email', PartierController.getPartierByEmail);
 router.post('/', PartierController.postPartier);
-router.post('/emailExist', PartierController.emailExist);
+router.post('/emailExists', PartierController.emailExists);
 router.patch('/', PartierController.updatePartier);
 router.patch('/updateAddress', PartierController.updateAddress)
 router.delete('/:id', PartierController.deletePartier);
@@ -32,6 +32,7 @@ router.post('/register', upload.fields([
     {name: 'profilePicture', maxCount: 1},
     {name: 'phoneNumber', maxCount: 1},
     {name: 'refPhoneNumber', maxCount: 1},
+    {name: 'isAdmin', maxCount:1},
     {name: 'addressTown', maxCount: 1},
     {name: 'addressZipCode', maxCount: 1}
 ]), PartierController.registerPartier);
