@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS organisation CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS organization CASCADE;
 DROP TABLE IF EXISTS town CASCADE;
 DROP TABLE IF EXISTS partier CASCADE;
@@ -8,15 +8,23 @@ DROP TABLE IF EXISTS shuttle_member CASCADE;
 DROP TABLE IF EXISTS shuttleMember CASCADE;
 
 -- Partie création des tables
--- organization
-CREATE TABLE organization (
+-- user
+CREATE TABLE "user" (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email varchar NOT NULL,
     password varchar NOT NULL,
-    name varchar UNIQUE NOT NULL,
+    pseudo varchar NOT NULL,
+    phoneNumber varchar NOT NULL,
+    hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
+    isAdmin boolean NOT NULL DEFAULT false
+);
+
+-- organization
+CREATE TABLE organization (
+    userID integer REFERENCES "user"(id),
     responsibleName varchar NOT NULL,
-    referencePhoneNumber varchar NOT NULL,
-    isVerified boolean NOT NULL DEFAULT false
+    isVerified boolean NOT NULL DEFAULT false,
+    PRIMARY KEY (userID)
 );
 
 -- Town
@@ -28,18 +36,13 @@ CREATE TABLE town (
 
 -- Partier
 CREATE TABLE partier (
-    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    email varchar UNIQUE NOT NULL,
-    pseudo varchar NOT NULL,
-    password varchar NOT NULL,
+    userID integer REFERENCES "user"(id),
     firstName varchar NOT NULL,
     lastName varchar NOT NULL,
-    hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
-    phoneNumber varchar NOT NULL,
     refPhoneNumber varchar,
-    isAdmin boolean NOT NULL DEFAULT false,
     addressTown varchar,
     addressZipCode integer,
+    PRIMARY KEY (userID),
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
 );
 
@@ -52,7 +55,7 @@ CREATE TABLE event (
     departingPoint varchar NOT NULL,
     startDateTime timestamp NOT NULL,
     endDateTime timestamp NOT NULL,
-    organizationId integer REFERENCES organization(id) NOT NULL,
+    organizationId integer REFERENCES organization(userID) NOT NULL,
     addressTown varchar,
     addressZipCode integer,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
@@ -74,19 +77,29 @@ CREATE TABLE shuttleMember (
     hasValidated boolean NOT NULL,
     hasArrivedSafely boolean NOT NULL DEFAULT false,
     shuttleId integer REFERENCES shuttle(id) DEFERRABLE INITIALLY IMMEDIATE,
-    partierId integer REFERENCES partier(id) DEFERRABLE INITIALLY IMMEDIATE,
+    partierId integer REFERENCES partier(userID) DEFERRABLE INITIALLY IMMEDIATE,
     PRIMARY KEY (shuttleId, partierId)
 );
 
 -- Partie remplissage de la base de données
+-- user
+INSERT INTO "user"(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES
+('cercleIESN@gmail.com', 'password', 'Cercle IESN', '0498867457', false, false),
+('cercleEco@gmail.com', 'password', 'Cercle Eco', '0478965467', false, false),
+('cercleChigé@gmail.com', 'password', 'Cercle Chigé', '086754654', false, false),
+('etu44721@henallux.be', 'password', 'Wan', '0499517092', false, false),
+('etu44108@henallux.be', 'password', 'Sim', '0499172696', false, false),
+('etu47233@henallux.be', 'password', 'MrKenma', '0499579465', false, false),
+('fhmqez@gmail.com', 'password', 'Pseudo', '0499270747', false, true);
+
 -- organization
-INSERT INTO organization (email, password, name, responsibleName, referencePhoneNumber, isVerified) VALUES
-('cercleIESN@gmail.com', 'password', 'Cercle IESN', 'Jean Dupont', '0498867457', false),
-('cercleEco@gmail.com', 'password', 'Cercle Eco', 'Guillaume Turpin', '0478965467', false),
-('cercleChigé@gmail.com', 'password', 'Cercle Chigé', 'La panthère rose', '086754654', false);
+INSERT INTO organization (userID, responsibleName, isVerified) VALUES
+(1, 'Jean Dupont', false),
+(2, 'Guillaume Turpin', false),
+(3, 'La panthère rose', true);
 
 -- Town
-INSERT INTO town ("name", zipCode) VALUES
+INSERT INTO town (name, zipCode) VALUES
 ('Namur', 5000),
 ('Beez', 5000),
 ('Belgrade', 5001),
@@ -115,11 +128,11 @@ INSERT INTO town ("name", zipCode) VALUES
 ('Loyers', 5101);
 
 -- Partier
-INSERT INTO partier (email, pseudo, password, firstName, lastName, hasUploadedProfilePicture, phoneNumber, refPhoneNumber,isAdmin, addressTown, addressZipCode) VALUES
-('etu44721@henallux.be', 'Wan', 'password', 'Wangi', 'Weber', false, '0499517092', '0499265087',true, 'Saint-Servais', 5002),
-('etu44108@henallux.be', 'Sim', 'password', 'Simon', 'Rollus', false, '0499172696', '0499585449',false, 'Malonne', 5020),
-('etu47233@henallux.be', 'MrKenma', 'password', 'Julien', 'Hanquet', false, '0499579465', '0499164954',false, 'Wierde', 5100),
-('fhmqez@gmail.com', 'Pseudo', 'password', 'Prénom', 'Nom', false, '0499270747', null,true, 'Loyers', 5101);
+INSERT INTO partier (userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode) VALUES
+(4, 'Wangi', 'Weber', '0499265087', 'Saint-Servais', 5002),
+(5, 'Simon', 'Rollus', '0499585449', 'Malonne', 5020),
+(6, 'Julien', 'Hanquet', '0499164954', 'Wierde', 5100),
+(7, 'Prénom', 'Nom', '0498629782', 'Loyers', 5101);
 
 -- Event
 INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES
@@ -144,6 +157,6 @@ INSERT INTO shuttle (departureTime, eventId, destinationTown, destinationZipCode
 
 -- Shuttle member
 INSERT INTO shuttleMember (hasValidated, hasArrivedSafely, shuttleId, partierId) VALUES
-(true, false, 1, 1),
-(false, false,  2, 1),
-(false, false, 4, 2);
+(true, false, 1, 4),
+(false, false,  2, 4),
+(false, false, 4, 5);
