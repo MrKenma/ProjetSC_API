@@ -11,9 +11,9 @@ DROP TABLE IF EXISTS shuttleMember CASCADE;
 -- user
 CREATE TABLE "user" (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    email varchar NOT NULL,
+    email varchar NOT NULL UNIQUE,
     password varchar NOT NULL,
-    pseudo varchar NOT NULL,
+    pseudo varchar NOT NULL UNIQUE,
     phoneNumber varchar NOT NULL,
     hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
     isAdmin boolean NOT NULL DEFAULT false
@@ -21,10 +21,10 @@ CREATE TABLE "user" (
 
 -- organization
 CREATE TABLE organization (
-    userID integer REFERENCES "user"(id),
+    userID integer PRIMARY KEY,
     responsibleName varchar NOT NULL,
     isVerified boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (userID)
+    FOREIGN KEY(userID) REFERENCES "user"(id) ON DELETE CASCADE
 );
 
 -- Town
@@ -36,13 +36,13 @@ CREATE TABLE town (
 
 -- Partier
 CREATE TABLE partier (
-    userID integer REFERENCES "user"(id),
+    userID integer PRIMARY KEY ,
     firstName varchar NOT NULL,
     lastName varchar NOT NULL,
     refPhoneNumber varchar,
     addressTown varchar,
     addressZipCode integer,
-    PRIMARY KEY (userID),
+    FOREIGN KEY (userID) REFERENCES "user"(id) ON DELETE CASCADE,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE event (
     departingPoint varchar NOT NULL,
     startDateTime timestamp NOT NULL,
     endDateTime timestamp NOT NULL,
-    organizationId integer REFERENCES organization(userID) NOT NULL,
+    organizationID integer REFERENCES organization(userID) NOT NULL,
     addressTown varchar,
     addressZipCode integer,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
@@ -84,13 +84,13 @@ CREATE TABLE shuttleMember (
 -- Partie remplissage de la base de données
 -- user
 INSERT INTO "user"(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES
-('cercleIESN@gmail.com', 'password', 'Cercle IESN', '0498867457', false, false),
-('cercleEco@gmail.com', 'password', 'Cercle Eco', '0478965467', false, false),
-('cercleChigé@gmail.com', 'password', 'Cercle Chigé', '086754654', false, false),
-('etu44721@henallux.be', 'password', 'Wan', '0499517092', false, false),
-('etu44108@henallux.be', 'password', 'Sim', '0499172696', false, false),
-('etu47233@henallux.be', 'password', 'MrKenma', '0499579465', false, false),
-('fhmqez@gmail.com', 'password', 'Pseudo', '0499270747', false, true);
+('cercleIESN@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle IESN', '0498867457', false, false),
+('cercleEco@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Eco', '0478965467', false, false),
+('cercleChigé@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Chigé', '086754654', false, false),
+('etu44721@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Wan', '0499517092', false, false),
+('etu44108@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Sim', '0499172696', false, false),
+('etu47233@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'MrKenma', '0499579465', false, false),
+('fhmqez@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Pseudo', '0499270747', false, true);
 
 -- organization
 INSERT INTO organization (userID, responsibleName, isVerified) VALUES
@@ -135,7 +135,7 @@ INSERT INTO partier (userID, firstName, lastName, refPhoneNumber, addressTown, a
 (7, 'Prénom', 'Nom', '0498629782', 'Loyers', 5101);
 
 -- Event
-INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES
+/* INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES
 ('Bunker med', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
 ('Bunker info', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
 ('Bunker eco', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
@@ -144,19 +144,19 @@ INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDat
 ('Forfaire eco', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Bonnine', 5021),
 ('Soirée de rentrée', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Loyers', 5101),
 ('La St-nic', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Erpent', 5101),
-('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Jambes', 5100);
+('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Jambes', 5100); */
 
 -- Shuttle
-INSERT INTO shuttle (departureTime, eventId, destinationTown, destinationZipCode) VALUES
+/* INSERT INTO shuttle (departureTime, eventId, destinationTown, destinationZipCode) VALUES
 (current_timestamp, 1, 'Wierde', 5100),
 (current_timestamp, 1, 'Bonnine', 5021),
 (current_timestamp, 1, 'Cognelée', 5022),
 (current_timestamp, 2, 'Wierde', 5100),
 (current_timestamp, 2, 'Saint-Marc', 5003),
 (current_timestamp, 3, 'Bouge', 5004);
-
+ */
 -- Shuttle member
-INSERT INTO shuttleMember (hasValidated, hasArrivedSafely, shuttleId, partierId) VALUES
+/* INSERT INTO shuttleMember (hasValidated, hasArrivedSafely, shuttleId, partierId) VALUES
 (true, false, 1, 4),
 (false, false,  2, 4),
-(false, false, 4, 5);
+(false, false, 4, 5); */

@@ -1,19 +1,76 @@
 const pool = require('../model/database');
 const PartierModel = require('../model/partier');
-const ImageModel = require('../model/image');
 
-module.exports.getPartier = async (req, res) => {
+
+/***************** CRUD for partier *****************/
+
+module.exports.findAll = async (req, res) => {
+    const client = await pool.connect();
+    
+    try {
+        const {rows: partiers} = await PartierModel.findAll(client);
+
+        if (partiers === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(partiers);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
+module.exports.findOne = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
     try {
-        const {rows: partiers} = await PartierModel.getPartier(id, client);
-        const partier = partiers[0];
-        if (partier !== undefined) {
-            res.json(partier);
-        } else {
-            res.sendStatus(404);
+
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
         }
+
+        const {rows : partiers} = await PartierModel.findOne(id, client);
+
+        const partier = partiers[0];
+
+        if (partier === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(partier);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
+}
+
+module.exports.create = async (req, res) => {
+    const client = await pool.connect();
+    const { userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode } = req.body;
+
+    try {
+
+        if (userID === undefined || firstName === undefined || lastName === undefined || referencePhoneNumber === undefined || addressTown === undefined || addressZipCode === undefined) {
+            res.sendStatus(400);
+            return;
+        }
+
+        await PartierModel.create(userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode, client);
+
+        res.sendStatus(201);
+
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -22,23 +79,60 @@ module.exports.getPartier = async (req, res) => {
     }
 }
 
-module.exports.getPartierByEmail = async (req, res) => {
+module.exports.update = async (req, res) => {
     const client = await pool.connect();
-    const email = req.params.email;
+    const { id } = req.body;
 
     try {
-        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
+
+        if (id === undefined || isNaN(id)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const {rows: partiers} = await PartierModel.findOne(id, client);
 
         const partier = partiers[0];
 
         if (partier === undefined) {
-            res.json({id : -1})
+            res.sendStatus(404);
             return;
         }
 
-        console.log(partier);
+        const { firstname : firstName, lastname : lastName, refphonenumber: referencePhoneNumber, addresstown: addressTown, addresszipcode: addressZipCode } = partier;
 
-        res.json(partier);
+        const newFirstName = req.body.firstName === undefined ? firstName : req.body.firstName;
+        const newLastName = req.body.lastName === undefined ? lastName : req.body.lastName;
+        const newReferencePhoneNumber = req.body.referencePhoneNumber === undefined ? referencePhoneNumber : req.body.referencePhoneNumber;
+        const newAddressTown = req.body.addressTown === undefined ? addressTown : req.body.addressTown;
+        const newAddressZipCode = req.body.addressZipCode === undefined ? addressZipCode : req.body.addressZipCode;
+
+
+        await PartierModel.update(id, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}
+
+module.exports.delete = async (req, res) => {
+
+    const client = await pool.connect();
+    const userID = req.params.id;
+
+    try {
+        
+        if (isNaN(userID)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        await PartierModel.delete(userID, client);
        
     } catch (error) {
         console.error(error);
@@ -48,49 +142,10 @@ module.exports.getPartierByEmail = async (req, res) => {
     }
 }
 
-module.exports.getPartiers = async (req, res) => {
-    const client = await pool.connect();
+/***************** CRUD for partier *****************/
 
-    try {
-        const {rows: partiers} = await PartierModel.getPartiers(client);
-        if (partiers !== undefined) {
-            res.json(partiers);
-        } else {
-            res.sendStatus(404);
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
 
-module.exports.getPartierByEmail = async (req, res) => {
-    const client = await pool.connect();
-    const email = req.params.email;
-
-    try {
-        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
-
-        const partier = partiers[0];
-
-        if (partier === undefined) {
-            res.json({id : -1})
-            return;
-        }
-
-        res.json(partier);
-       
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.registerPartier = async (req, res) => {
+/* module.exports.registerPartier = async (req, res) => {
     const client = await pool.connect();
     const profilePicture = req.files.profilePicture ? req.files.profilePicture[0] : undefined;
     const {email,
@@ -152,153 +207,7 @@ module.exports.registerPartier = async (req, res) => {
     } finally {
         client.release();
     }
-}
+} */
 
-module.exports.postPartier = async (req, res) => {
-    const client = await pool.connect();
-    const {email,
-        pseudo,
-        password,
-        firstName,
-        lastName,
-        picture,
-        phoneNumber,
-        refPhoneNumber,
-        isAdmin,
-        addressTown,
-        addressZipCode} = req.body;
 
-    try {
-        await PartierModel.postPartier(email,
-            pseudo,
-            password,
-            firstName,
-            lastName,
-            picture,
-            phoneNumber,
-            refPhoneNumber,
-            isAdmin,
-            addressTown,
-            addressZipCode,
-            client);
-        res.sendStatus(201);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
 
-module.exports.updateAddress = async (req, res) => {
-    const client = await pool.connect();
-    const {email, addressTown, addressZipCode} = req.body;
-
-    if (email === undefined || addressTown === undefined || addressZipCode === undefined) {
-        res.sendStatus(400);
-        return;
-    }
-
-    try {
-        await PartierModel.updateAddress(email, addressTown, addressZipCode, client);
-        res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.updatePartier = async (req, res) => {
-    const client = await pool.connect();
-    const { id,
-        email,
-        pseudo,
-        password,
-        firstName,
-        lastName,
-        picture,
-        phoneNumber,
-        refPhoneNumber,
-        isAdmin,
-        addressTown,
-        addressZipCode} = req.body;
-
-    try {
-        await PartierModel.updatePartier(
-            id,
-            email,          
-            pseudo,
-            password,
-            firstName,
-            lastName,
-            picture,
-            phoneNumber,
-            refPhoneNumber,
-            isAdmin,
-            addressTown,
-            addressZipCode, client);
-        res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.deletePartier = async (req, res) => {
-    const client = await pool.connect();
-    const id = req.params.id;
-
-    try {
-        await PartierModel.deletePartier(id, client);
-        res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.emailExists = async (req, res) => {
-    const client = await pool.connect();
-    const {id, email} = req.params;
-
-    try {
-        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
-
-        if (partiers[0] !== undefined) {
-            res.json({exists: false});
-        } else {
-            res.json({exists: partiers[0].id !== id});
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.emailExists = async (req, res) => {
-    const client = await pool.connect();
-    const {id, email} = req.params;
-
-    try {
-        const {rows: partiers} = await PartierModel.getPartierByEmail(email, client);
-
-        if (partiers[0] !== undefined) {
-            res.json({exists: false});
-        } else {
-            res.json({exists: partiers[0].id !== id});
-        }
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}

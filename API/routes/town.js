@@ -2,6 +2,9 @@ const TownController = require('../controller/town');
 const Router = require('express-promise-router');
 const router = new Router;
 
-router.get('/all', TownController.getTowns);
+router.get('/', TownController.findAll);
+//router.post('/', TownController.create);
+
+
 
 module.exports = router;

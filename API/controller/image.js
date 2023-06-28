@@ -1,6 +1,6 @@
 const ImageModel = require('../model/image');
 
-module.exports.getUuidFromEmail = async (req, res) => {
+module.exports.getUuidFromEmail = (req, res) => {
     const email = req.params.email;
 
     if (email === undefined || typeof email !== 'string') {
@@ -8,7 +8,7 @@ module.exports.getUuidFromEmail = async (req, res) => {
         return;
     }
 
-    const uuid = await ImageModel.getUuidFromEmail(email);
+    const uuid = ImageModel.getUuidFromEmail(email);
         
     if (uuid === undefined) {
         res.sendStatus(500);

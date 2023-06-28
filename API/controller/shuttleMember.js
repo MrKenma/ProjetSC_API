@@ -1,23 +1,33 @@
 const pool = require('../model/database');
 const ShuttleMemberModel = require('../model/shuttleMember');
 
-module.exports.getShuttleMembers = async (req, res) => {
+module.exports.findOne = async (req, res) => {
     const client = await pool.connect();
+    const id = req.params.id;
 
     try {
-        
-        const {rows: shuttleMembers} = await ShuttleMemberModel.getShuttleMembers(client);
 
-        if (shuttleMembers == undefined) {
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
+        }
+        
+        const {rows: shuttleMembers} = await ShuttleMemberModel.findOne(id, client);
+
+        const shuttleMember = shuttleMembers[0];
+
+        if (shuttleMember === undefined) {
             res.sendStatus(404);
             return;
         }
 
-        res.json(shuttleMembers);
+        res.json(shuttleMember);
 
     } catch (error) {
+
         console.error(error);
         res.sendStatus(500);
+
     } finally {
         client.release();
     }

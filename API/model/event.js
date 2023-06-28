@@ -1,11 +1,13 @@
-// Get d'un seul event
-module.exports.getEvent = async (id, client) => {
+module.exports.findAll = async (client) => {
+    return await client.query(`SELECT * FROM event`);
+}
+
+module.exports.findOne = async (id, client) => {
     return await client.query(`SELECT * FROM event WHERE id = $1`, [id]);
 }
 
-// Get de tous les events
-module.exports.getEvents = async (client) => {
-    return await client.query(`SELECT * FROM event`);
+module.exports.delete = async (id, client) => {
+    return await client.query(`DELETE FROM event WHERE id = $1`, [id]);
 }
 
 module.exports.postEvent = async (name, description, nameAndNumStreet, departingPoint, startDateAndTime, endDateAndTime, organizationId, addressTown, addressZipCode, client) => {

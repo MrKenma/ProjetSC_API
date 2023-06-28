@@ -1,36 +1,77 @@
 const pool = require('../model/database');
 const EventModel = require('../model/event');
 
-module.exports.getEvent = async (req, res) => {
+module.exports.findAll = async (req, res) => {
+
+    const client = await pool.connect();
+
+    try {
+
+        const {rows: events} = await EventModel.findAll(client);
+
+        if (events === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(events);
+        
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
+}
+
+module.exports.findOne = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
     try {
-        const {rows: events} = await EventModel.getEvent(id, client);
-        const event = events[0];
-        if (event !== undefined) {
-            res.json(event);
-        } else {
-            res.sendStatus(404);
+
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
         }
+
+        const {rows: events} = await EventModel.getEvent(id, client);
+
+        const event = events[0];
+
+        if (event === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(event);
+       
     } catch (error) {
+
         console.error(error);
         res.sendStatus(500);
+        
     } finally {
         client.release();
     }
 }
 
-module.exports.getEvents = async (req, res) => {
+module.exports.create = async (req, res) => {
     const client = await pool.connect();
+    const {name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode} = req.body;
 
     try {
-        const {rows: events} = await EventModel.getEvents(client);
-        if (events !== undefined) {
-            res.json(events);
-        } else {
-            res.sendStatus(404);
+
+        if (!name || !description || !nameAndNumStreet || !departingPoint || !startDateTime || !endDateTime || !organizationId || !addressTown || !addressZipCode) {
+            res.sendStatus(400);
+            return;
         }
+
+        await EventModel.create(name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode, client);
+        res.sendStatus(201);
+
     } catch (error) {
         console.error(error);
         res.sendStatus(500);
@@ -39,7 +80,13 @@ module.exports.getEvents = async (req, res) => {
     }
 }
 
-module.exports.getEventsByTown = async (req, res) => {
+module.exports.update = async (req, res) => {
+}
+
+module.exports.delete = async (req, res) => {
+}
+
+/* module.exports.getEventsByTown = async (req, res) => {
     const client = await pool.connect();
     const { name, zipcode } = req.body;
 
@@ -126,4 +173,4 @@ module.exports.deleteEvent = async (req, res) => {
     } finally {
         client.release();
     }
-}
+} */
