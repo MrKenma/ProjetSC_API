@@ -39,5 +39,5 @@ module.exports.pseudoExists = async (pseudo, client) => {
 
     Etant donné, qu'on se trouve dans une transaction, l'élement n'est réellement inséré dans la base de données qu'à la fin de la transaction. 
     Donc techniquement, 
-    l'id n'existe pas encore donc il faut aller le chercher dans la séquence en utilisant lastval().
+    l'id n'existe pas encore donc il faut aller directement le chercher dans la séquence en utilisant lastval().
 */

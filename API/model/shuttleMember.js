@@ -1,5 +1,5 @@
 module.exports.findAll = async (client) => {
-    return await client.query('SELECT * FROM shuttle');
+    return await client.query('SELECT * FROM shuttleMember');
 }
 
 module.exports.delete = async (id, client) => {

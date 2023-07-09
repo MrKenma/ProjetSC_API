@@ -37,7 +37,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
 
-        const {rows: events} = await EventModel.getEvent(id, client);
+        const {rows: events} = await EventModel.findOne(id, client);
 
         const event = events[0];
 
@@ -84,6 +84,36 @@ module.exports.update = async (req, res) => {
 }
 
 module.exports.delete = async (req, res) => {
+}
+
+module.exports.findManyByOrganization = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const organizationId = req.params.id;
+
+        if (isNaN(organizationId)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const {rows: events} = await EventModel.findManyByOrganization(organizationId, client);
+
+        if (events === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(events);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
 }
 
 /* module.exports.getEventsByTown = async (req, res) => {

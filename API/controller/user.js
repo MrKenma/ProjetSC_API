@@ -285,6 +285,7 @@ module.exports.login = async (req, res) => {
         const user = users[0];
 
         if (user === undefined) {
+            console.log('user is undefined');
             res.sendStatus(404);
             return;
         }
@@ -295,12 +296,30 @@ module.exports.login = async (req, res) => {
         }
 
         const payload = {status : user.isadmin, value : {email: user.email}};
+        const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
 
-        console.log(payload);
-        const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1h'});
+        const {rows: partiers} = await PartierModel.findOne(user.id, client);
+
+        const partier = partiers[0];
+
+        if (partier !== undefined) {
+            user.partier = partier;
+            res.json({user : user, token: token});
+            return;
+        }
+
+        const {rows: organizations} = await OrganizationModel.findOne(user.id, client);
+
+        const organization = organizations[0];
+
+        if (organization !== undefined) {
+            user.organization = organization;
+            res.json({user : user, token: token});
+            return;
+        }
+
+        res.sendStatus(404);
     
-        res.json({user : user, token: token});
-
     } catch (error) {
             
         console.error(error);

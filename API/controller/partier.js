@@ -81,16 +81,18 @@ module.exports.create = async (req, res) => {
 
 module.exports.update = async (req, res) => {
     const client = await pool.connect();
-    const { id } = req.body;
+    const { userid } = req.body;
+
+    console.log(req.body);
 
     try {
 
-        if (id === undefined || isNaN(id)) {
+        if (userid === undefined || isNaN(userid)) {
             res.sendStatus(400);
             return;
         }
 
-        const {rows: partiers} = await PartierModel.findOne(id, client);
+        const {rows: partiers} = await PartierModel.findOne(userid, client);
 
         const partier = partiers[0];
 
@@ -101,14 +103,14 @@ module.exports.update = async (req, res) => {
 
         const { firstname : firstName, lastname : lastName, refphonenumber: referencePhoneNumber, addresstown: addressTown, addresszipcode: addressZipCode } = partier;
 
-        const newFirstName = req.body.firstName === undefined ? firstName : req.body.firstName;
-        const newLastName = req.body.lastName === undefined ? lastName : req.body.lastName;
-        const newReferencePhoneNumber = req.body.referencePhoneNumber === undefined ? referencePhoneNumber : req.body.referencePhoneNumber;
-        const newAddressTown = req.body.addressTown === undefined ? addressTown : req.body.addressTown;
-        const newAddressZipCode = req.body.addressZipCode === undefined ? addressZipCode : req.body.addressZipCode;
+        const newFirstName = req.body.firstname === undefined ? firstName : req.body.firstname;
+        const newLastName = req.body.lastname === undefined ? lastName : req.body.lastname;
+        const newReferencePhoneNumber = req.body.refphoneNumber === undefined ? referencePhoneNumber : req.body.referencePhoneNumber;
+        const newAddressTown = req.body.addresstown === undefined ? addressTown : req.body.addresstown;
+        const newAddressZipCode = req.body.addresszipCode === undefined ? addressZipCode : req.body.addresszipcode;
 
 
-        await PartierModel.update(id, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);
+        await PartierModel.update(userid, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);
 
         res.sendStatus(200);
 

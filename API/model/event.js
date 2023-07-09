@@ -32,6 +32,6 @@ module.exports.getEventsByTown = async (addressTown, addressZipcode, client) => 
     return await client.query(`SELECT * FROM event WHERE addressTown = $1 AND addressZipCode = $2`, [addressTown, addressZipcode]);
 }
 
-module.exports.getEventsByOrganization = async (organizationId, client) => {
+module.exports.findManyByOrganization = async (organizationId, client) => {
     return await client.query(`SELECT * FROM event WHERE organizationid = $1`, [organizationId]);
 }

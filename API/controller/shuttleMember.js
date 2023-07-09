@@ -32,3 +32,23 @@ module.exports.findOne = async (req, res) => {
         client.release();
     }
 }
+
+module.exports.findAll = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        const {rows: shuttleMembers} = await ShuttleMemberModel.findAll(client);
+
+        if (shuttleMembers === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(shuttleMembers);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    } finally {
+        client.release();
+    }
+}

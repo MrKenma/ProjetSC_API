@@ -3,6 +3,7 @@ const Router = require('express-promise-router');
 const router = new Router;
 
 router.get('/', EventController.findAll);
+router.get('/organization/:id', EventController.findManyByOrganization);
 router.get('/:id', EventController.findOne);
 
 router.post('/', EventController.create);
