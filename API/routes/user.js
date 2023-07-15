@@ -17,7 +17,7 @@ router.get('/login', UserController.login);
 router.get('/emailExists/:email', UserController.emailExists);
 router.get('/pseudoExists/:pseudo', UserController.pseudoExists);
 
-router.get('/', UserController.findAll);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.findAll);
 router.get('/:id', UserController.findOne);
 
 router.post('/', UserController.create);

@@ -3,33 +3,28 @@ const { DataTypes, Sequelize, Deferrable } = require('sequelize');
 const User = require("./user");
 
 const Partier = sequelize.define('partier', {
-    userId: {
+    userid: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'id',
-            deferrable: Deferrable.INITIALLY_IMMEDIATE
-        }
     },
-    firstName: {
+    firstname: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    lastName: {
+    lastname: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    refPhoneNumber: {
+    refphonenumber: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    addressTown: {
+    addresstown: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    addressZipCode: {
+    addresszipcode: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -37,5 +32,8 @@ const Partier = sequelize.define('partier', {
     timestamps: false,
     freezeTableName: true
 });
+
+
+
 
 module.exports = Partier;

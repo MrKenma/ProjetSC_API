@@ -1,5 +1,13 @@
 const pool = require('../model/database');
+const sequelize = require('../ORM/sequelize');
 const EventModel = require('../model/event');
+const EventORM = require('../ORM/model/event');
+const OrganizationORM = require('../ORM/model/organization');
+const UserORM = require('../ORM/model/user');
+const ShuttleORM = require('../ORM/model/shuttle');
+const ShuttleMemberORM = require('../ORM/model/shuttleMember');
+
+
 
 module.exports.findAll = async (req, res) => {
 
@@ -60,16 +68,20 @@ module.exports.findOne = async (req, res) => {
 
 module.exports.create = async (req, res) => {
     const client = await pool.connect();
-    const {name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode} = req.body;
+    // all lowercase variables names
+    const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode } = req.body;
+    const organizationid = parseInt(req.body.organizationid);
+
+    console.log(req.body);
 
     try {
 
-        if (!name || !description || !nameAndNumStreet || !departingPoint || !startDateTime || !endDateTime || !organizationId || !addressTown || !addressZipCode) {
+        if (name === undefined || description === undefined || nameandnumstreet === undefined || departingpoint === undefined || startdatetime === undefined || enddatetime === undefined || organizationid === undefined || addresstown === undefined || addresszipcode === undefined) {
             res.sendStatus(400);
             return;
         }
 
-        await EventModel.create(name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode, client);
+        const { rows: events } = await EventModel.create(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
         res.sendStatus(201);
 
     } catch (error) {
@@ -85,6 +97,34 @@ module.exports.update = async (req, res) => {
 
 module.exports.delete = async (req, res) => {
 }
+
+module.exports.nameExists = async (req, res) => {
+    const client = await pool.connect();
+    const name = decodeURIComponent(req.params.name);
+
+    try {
+
+        if (name === undefined) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const { rows } = await EventModel.nameExists(name, client);
+
+        res.json(rows[0].count > 0);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
+
+}
+        
+
 
 module.exports.findManyByOrganization = async (req, res) => {
     const client = await pool.connect();
@@ -116,12 +156,38 @@ module.exports.findManyByOrganization = async (req, res) => {
     }
 }
 
-/* module.exports.getEventsByTown = async (req, res) => {
-    const client = await pool.connect();
-    const { name, zipcode } = req.body;
+module.exports.search = async (req, res) => {
+    const eventid = parseInt(req.query.eventid);
 
     try {
-        const {rows: events} = await EventModel.getEventsByTown(name, zipcode, client);
+        
+        if (isNaN(eventid)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const events = await EventORM.findAll({
+            where: {
+                id: eventid
+            },
+            include: [
+                {
+                    model: OrganizationORM,
+                    include: [
+                        {
+                            model: UserORM,
+                        }
+                    ]
+                }
+            ],
+            attributes: {
+                include : [
+                    [sequelize.literal('(SELECT COUNT(*) from shuttlemember INNER JOIN shuttle ON shuttle.eventid = event.id where shuttlemember.shuttleid = shuttle.id)'), 'attendees'],
+                    [sequelize.literal('(SELECT COUNT(*) from shuttlemember INNER JOIN shuttle ON shuttle.eventid = event.id where shuttlemember.shuttleid = shuttle.id AND shuttlemember.hasvalidated = true)'), 'validated'],
+                    [sequelize.literal('(SELECT COUNT(*) from shuttlemember INNER JOIN shuttle ON shuttle.eventid = event.id where shuttlemember.shuttleid = shuttle.id AND shuttlemember.hasarrivedsafely = true)'), 'arrived']
+                ]
+            }
+        });
 
         if (events === undefined) {
             res.sendStatus(404);
@@ -131,76 +197,9 @@ module.exports.findManyByOrganization = async (req, res) => {
         res.json(events);
 
     } catch (error) {
+
         console.error(error);
         res.sendStatus(500);
-    } finally {
-        client.release();
-    }
+
+    } 
 }
-
-module.exports.getEventsByOrganization = async (req, res) => {
-    const client = await pool.connect();
-    const organizationId = req.params.organizationId;
-
-    try {
-        const {rows: events} = await EventModel.getEventsByOrganization(organizationId, client);
-
-        if (events == undefined) {
-            res.sendStatus(404);
-            return;
-        }
-
-        res.json(events);
-
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.postEvent = async (req, res) => {
-    const client = await pool.connect();
-    const {name, description, nameAndNumStreet, departingPoint, startDateAndTime, endDateAndTime, organizationId, addressTown, addressZipCode} = req.body;
-
-    try {
-        await EventModel.postEvent(name, description, nameAndNumStreet, departingPoint, startDateAndTime, endDateAndTime, organizationId, addressTown, addressZipCode, client);
-        res.sendStatus(201);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.updateEvent = async (req, res) => {
-    const client = await pool.connect();
-    const {id, name, description, nameAndNumStreet, departingPoint, startDateAndTime, endDateAndTime, organizationId, addressTown, addressZipCode} = req.body;
-
-    try {
-        await EventModel.updateEvent(id, name, description, nameAndNumStreet, departingPoint, startDateAndTime, endDateAndTime, organizationId, addressTown, addressZipCode, client);
-        res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-}
-
-module.exports.deleteEvent = async (req, res) => {
-    const client = await pool.connect();
-    const id = req.params.id;
-
-    try {
-        await EventModel.deleteEvent(id, client);
-        res.sendStatus(204);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-} */

@@ -107,7 +107,7 @@ module.exports.update = async (req, res) => {
         const newLastName = req.body.lastname === undefined ? lastName : req.body.lastname;
         const newReferencePhoneNumber = req.body.refphoneNumber === undefined ? referencePhoneNumber : req.body.referencePhoneNumber;
         const newAddressTown = req.body.addresstown === undefined ? addressTown : req.body.addresstown;
-        const newAddressZipCode = req.body.addresszipCode === undefined ? addressZipCode : req.body.addresszipcode;
+        const newAddressZipCode = req.body.addresszipcode === undefined ? addressZipCode : req.body.addresszipcode;
 
 
         await PartierModel.update(userid, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);

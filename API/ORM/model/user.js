@@ -1,5 +1,6 @@
 const sequelize = require("../sequelize");
 const { DataTypes } = require('sequelize');
+const Partier = require("./partier");
 
 const User = sequelize.define('user', {
     id: {
@@ -15,11 +16,11 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    phoneNumber: {
+    phonenumber: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    hasUploadedProfilePicture: {
+    hasuploadedprofilepicture: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     }
@@ -27,5 +28,6 @@ const User = sequelize.define('user', {
     timestamps: false,
     freezeTableName: true
 });
+
 
 module.exports = User;

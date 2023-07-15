@@ -1,9 +1,11 @@
 const pool = require('../model/database');
+const sequelize = require('../ORM/sequelize');
 const ShuttleModel = require('../model/shuttle');
 const ShuttleORM = require('../ORM/model/shuttle');
 const ShuttleMemberORM = require('../ORM/model/shuttleMember');
 const PartierORM = require('../ORM/model/partier');
 const UserORM = require('../ORM/model/user');
+const EventORM = require('../ORM/model/event');
 
 module.exports.findAll = async (req, res) => {
     const client = await pool.connect();
@@ -63,13 +65,16 @@ module.exports.findOne = async (req, res) => {
     }
 }
 
-module.exports.findByEvent = async (req, res) => {
+module.exports.search = async (req, res) => {
     const client = await pool.connect();
-    const eventID = parseInt(req.params.id);
+
+    const eventid = parseInt(req.query.eventid);
+    const destinationtown = req.query.destinationtown;
+    const destinationzipcode = req.query.destinationzipcode;
 
     try {
 
-        if (isNaN(eventID)) {
+        if (isNaN(eventid)) {
             console.log("eventID is NaN");
             res.sendStatus(400);
             return;
@@ -77,21 +82,26 @@ module.exports.findByEvent = async (req, res) => {
 
         // findAll shuttle by event with all shuttleMember includes
         const shuttles = await ShuttleORM.findAll({
+            where: {
+                eventid: eventid,
+                destinationtown: destinationtown,
+                destinationzipcode: destinationzipcode
+            },
             include: [
                 {
-                    model : ShuttleMemberORM,
-                    required: true
-                }, {
-                    model : PartierORM,
-                    required : true
-                }, {
-                    model: UserORM,
-                    required: true
+                    model: ShuttleMemberORM,
+                    include: [
+                        {
+                            model: PartierORM,
+                            include: [
+                                {
+                                    model: UserORM
+                                }
+                            ]
+                        }
+                    ]
                 }
-            ],
-            where : {
-                eventid : eventID
-            }
+            ]
         });
 
         if (shuttles === undefined) {
@@ -110,6 +120,55 @@ module.exports.findByEvent = async (req, res) => {
         client.release();
     }
 }
+
+module.exports.search2 = async (req, res) => {
+
+    const partierid = parseInt(req.query.partierid);
+
+    try {
+
+        if (isNaN(partierid)) {
+            console.log("partierID is NaN");
+            res.sendStatus(400);
+            return;
+        }
+
+        //findAll shuttle by partier with all shuttleMember includes
+        const shuttles = await ShuttleORM.findAll({
+            include: [
+                {
+                    model: EventORM
+                },
+                {
+                    model: ShuttleMemberORM,
+                    where: {
+                        partierid: partierid
+                    }
+                }
+            ],
+            attributes: {
+                include: [
+                  [sequelize.literal('(SELECT COUNT(*) FROM "shuttlemember" WHERE "shuttlemember"."shuttleid" = "shuttle"."id")'), 'totalPeople']
+                ]
+            }
+        });
+        
+
+        if (shuttles === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        res.json(shuttles);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    }
+}
+
 
 module.exports.create = async (req, res) => {
     const client = await pool.connect();

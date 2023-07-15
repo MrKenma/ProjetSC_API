@@ -1,10 +1,11 @@
+SET timezone = 'Europe/Paris'
+
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS organization CASCADE;
 DROP TABLE IF EXISTS town CASCADE;
 DROP TABLE IF EXISTS partier CASCADE;
 DROP TABLE IF EXISTS event CASCADE;
 DROP TABLE IF EXISTS shuttle CASCADE;
-DROP TABLE IF EXISTS shuttle_member CASCADE;
 DROP TABLE IF EXISTS shuttleMember CASCADE;
 
 -- Partie création des tables
@@ -13,8 +14,8 @@ CREATE TABLE "user" (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email varchar NOT NULL UNIQUE,
     password varchar NOT NULL,
-    pseudo varchar NOT NULL UNIQUE,
-    phoneNumber varchar NOT NULL,
+    pseudo varchar(16) NOT NULL UNIQUE,
+    phoneNumber varchar(10) NOT NULL,
     hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
     isAdmin boolean NOT NULL DEFAULT false
 );
@@ -22,7 +23,7 @@ CREATE TABLE "user" (
 -- organization
 CREATE TABLE organization (
     userID integer PRIMARY KEY,
-    responsibleName varchar NOT NULL,
+    responsibleName varchar(32) NOT NULL,
     isVerified boolean NOT NULL DEFAULT false,
     FOREIGN KEY(userID) REFERENCES "user"(id) ON DELETE CASCADE
 );
@@ -37,9 +38,9 @@ CREATE TABLE town (
 -- Partier
 CREATE TABLE partier (
     userID integer PRIMARY KEY ,
-    firstName varchar NOT NULL,
-    lastName varchar NOT NULL,
-    refPhoneNumber varchar,
+    firstName varchar(16) NOT NULL,
+    lastName varchar(16) NOT NULL,
+    refPhoneNumber varchar(10),
     addressTown varchar,
     addressZipCode integer,
     FOREIGN KEY (userID) REFERENCES "user"(id) ON DELETE CASCADE,
@@ -49,10 +50,10 @@ CREATE TABLE partier (
 -- Event
 CREATE TABLE event (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    name varchar NOT NULL,
-    description varchar NOT NULL,
-    nameAndNumStreet varchar NOT NULL,
-    departingPoint varchar NOT NULL,
+    name varchar(32) NOT NULL UNIQUE,
+    description varchar(256) NOT NULL,
+    nameAndNumStreet varchar(64) NOT NULL,
+    departingPoint varchar(64) NOT NULL,
     startDateTime timestamp NOT NULL,
     endDateTime timestamp NOT NULL,
     organizationID integer REFERENCES organization(userID) NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE shuttle (
 
 -- Shuttle member
 CREATE TABLE shuttleMember (
-    hasValidated boolean NOT NULL,
+    hasValidated boolean NOT NULL DEFAULT false,
     hasArrivedSafely boolean NOT NULL DEFAULT false,
     shuttleId integer REFERENCES shuttle(id) DEFERRABLE INITIALLY IMMEDIATE,
     partierId integer REFERENCES partier(userID) DEFERRABLE INITIALLY IMMEDIATE,
@@ -136,27 +137,13 @@ INSERT INTO partier (userID, firstName, lastName, refPhoneNumber, addressTown, a
 
 -- Event
 INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES
-('Bunker med', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
-('Bunker info', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
-('Bunker eco', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', current_timestamp, current_timestamp, 2, 'Malonne', 5020),
-('Bal des bleus', 'Soirée également plutôt sympa', 'rue Joseph Calozet, 19', 'sortie du parking', current_timestamp, current_timestamp, 1, 'Saint-Servais', 5002),
-('Forfaire info', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Beez', 5000),
-('Forfaire eco', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Bonnine', 5021),
-('Soirée de rentrée', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Loyers', 5101),
-('La St-nic', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Erpent', 5101),
-('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', current_timestamp, current_timestamp, 3, 'Jambes', 5100);
+('Bunker med', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
+('Bunker test', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
+('Bunker eco', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
+('Bal des bleus', 'Soirée également plutôt sympa', 'rue Joseph Calozet, 19', 'sortie du parking', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 1, 'Saint-Servais', 5002),
+('Forfaire info', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Beez', 5000),
+('Forfaire eco', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Bonnine', 5021),
+('Soirée de rentrée', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Loyers', 5101),
+('La St-nic', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Erpent', 5101),
+('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Jambes', 5100);
 
--- Shuttle
-/* INSERT INTO shuttle (departureTime, eventId, destinationTown, destinationZipCode) VALUES
-(current_timestamp, 1, 'Wierde', 5100),
-(current_timestamp, 1, 'Bonnine', 5021),
-(current_timestamp, 1, 'Cognelée', 5022),
-(current_timestamp, 2, 'Wierde', 5100),
-(current_timestamp, 2, 'Saint-Marc', 5003),
-(current_timestamp, 3, 'Bouge', 5004);
- */
--- Shuttle member
-/* INSERT INTO shuttleMember (hasValidated, hasArrivedSafely, shuttleId, partierId) VALUES
-(true, false, 1, 4),
-(false, false,  2, 4),
-(false, false, 4, 5); */

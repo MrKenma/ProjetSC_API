@@ -3,32 +3,27 @@ const { DataTypes, Sequelize, Deferrable } = require('sequelize');
 const Shuttle = require("./shuttle");
 const Partier = require("./partier");
 
-const ShuttleMember = sequelize.define('shuttleMember', {
-    shuttleId: {
+const ShuttleMember = sequelize.define('shuttlemember', {
+    shuttleid: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
-        references: {
-            model: Shuttle,
-            key: 'id',
-            deferrable: Deferrable.INITIALLY_IMMEDIATE
-        }
     },
-    partierId: {
+    partierid: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
         references: {
             model: Partier,
-            key: 'userId',
+            key: 'userid',
             deferrable: Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    hasValidated: {
+    hasvalidated: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     },
-    hasArrivedSafely: {
+    hasarrivedsafely: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
     }

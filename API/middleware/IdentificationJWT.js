@@ -13,6 +13,8 @@ module.exports.identification = async (req, res, next) => {
 
     const jwtToken = headerAuth.split(' ')[1];
 
+    // process.env.SECRET_TOKEN est 'secret' dans le .env
+
     try {
 
         const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);

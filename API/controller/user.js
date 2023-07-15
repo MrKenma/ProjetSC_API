@@ -226,7 +226,7 @@ module.exports.register = async (req, res) => {
         }
 
         const hasUploadedProfilePicture = req.files.profilePicture !== undefined;
-        
+
         if (hasUploadedProfilePicture) 
             await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture', "jpeg");
             
@@ -271,6 +271,7 @@ module.exports.login = async (req, res) => {
 
     const client = await pool.connect();
     const { email, password } = req.query;
+    let userRole;
 
     try {
 
@@ -284,19 +285,20 @@ module.exports.login = async (req, res) => {
 
         const user = users[0];
 
+        console.log(user);
+
         if (user === undefined) {
-            console.log('user is undefined');
             res.sendStatus(404);
             return;
         }
+
+        console.log(user.password)
+        console.log(password)
         
-        if (!compareHash(password, user.password)) {
+        if (! await compareHash(password, user.password)) {
             res.sendStatus(401);
             return;
         }
-
-        const payload = {status : user.isadmin, value : {email: user.email}};
-        const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
 
         const {rows: partiers} = await PartierModel.findOne(user.id, client);
 
@@ -304,8 +306,7 @@ module.exports.login = async (req, res) => {
 
         if (partier !== undefined) {
             user.partier = partier;
-            res.json({user : user, token: token});
-            return;
+            userRole = 'partier';
         }
 
         const {rows: organizations} = await OrganizationModel.findOne(user.id, client);
@@ -314,11 +315,23 @@ module.exports.login = async (req, res) => {
 
         if (organization !== undefined) {
             user.organization = organization;
-            res.json({user : user, token: token});
+            userRole = 'organization';
+        }
+
+        if(user.isadmin) {
+            userRole = 'admin';
+        }
+
+        if (!user.isadmin && partier === undefined && organization === undefined) { 
+            res.sendStatus(404);
             return;
         }
 
-        res.sendStatus(404);
+        console.log(userRole);
+
+        const payload = {status : userRole, value : {id: user.id, email: user.email}};
+        const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
+        res.json({user, token});
     
     } catch (error) {
             

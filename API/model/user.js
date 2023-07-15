@@ -33,11 +33,3 @@ module.exports.emailExists = async (email, client) => {
 module.exports.pseudoExists = async (pseudo, client) => {
     return await client.query(`SELECT COUNT(*) FROM "user" WHERE pseudo = $1`, [pseudo]);
 }
-
-/* Notes
-    Pourquoi j'utilise lastval() dans la fonction create et pas RETURNING id ?
-
-    Etant donné, qu'on se trouve dans une transaction, l'élement n'est réellement inséré dans la base de données qu'à la fin de la transaction. 
-    Donc techniquement, 
-    l'id n'existe pas encore donc il faut aller directement le chercher dans la séquence en utilisant lastval().
-*/
