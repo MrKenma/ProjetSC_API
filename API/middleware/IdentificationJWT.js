@@ -2,6 +2,8 @@ require('dotenv').config();
 const process = require('process');
 const jwt = require('jsonwebtoken');
 
+// le secret token est "secret"
+
 module.exports.identification = async (req, res, next) => {
 
     const headerAuth = req.get('authorization');
@@ -13,11 +15,10 @@ module.exports.identification = async (req, res, next) => {
 
     const jwtToken = headerAuth.split(' ')[1];
 
-    // process.env.SECRET_TOKEN est 'secret' dans le .env
-
     try {
 
         const decodedJwtToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN);
+        
         req.session = decodedJwtToken.value;
         req.session.authLevel = decodedJwtToken.status;
         next();

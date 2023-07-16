@@ -50,5 +50,15 @@ module.exports.mustBeAdminOrPartier = async (req, res, next) => {
     next();
 }
 
+module.exports.mustBeAdminOrOrganizationOrPartier = async (req, res, next) => {
+
+    if (req.session === undefined || (req.session.authLevel !== 'admin' && req.session.authLevel !== 'organization' && req.session.authLevel !== 'partier')) {
+        res.sendStatus(403);
+        return;
+    }
+    
+    next();
+}
+
 
 

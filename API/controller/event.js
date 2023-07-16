@@ -109,9 +109,7 @@ module.exports.nameExists = async (req, res) => {
             return;
         }
 
-        const { rows } = await EventModel.nameExists(name, client);
-
-        res.json(rows[0].count > 0);
+        res.json(await EventModel.nameExists(name, client));
 
     } catch (error) {
 
@@ -124,8 +122,6 @@ module.exports.nameExists = async (req, res) => {
 
 }
         
-
-
 module.exports.findManyByOrganization = async (req, res) => {
     const client = await pool.connect();
 
@@ -157,18 +153,18 @@ module.exports.findManyByOrganization = async (req, res) => {
 }
 
 module.exports.search = async (req, res) => {
-    const eventid = parseInt(req.query.eventid);
+    const id = parseInt(req.params.id);
 
     try {
         
-        if (isNaN(eventid)) {
+        if (isNaN(id)) {
             res.sendStatus(400);
             return;
         }
 
         const events = await EventORM.findAll({
             where: {
-                id: eventid
+                id: id
             },
             include: [
                 {

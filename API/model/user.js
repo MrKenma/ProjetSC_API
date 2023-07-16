@@ -27,9 +27,11 @@ module.exports.delete = async (id, client) => {
 }
 
 module.exports.emailExists = async (email, client) => {
-    return await client.query(`SELECT COUNT(*) FROM "user" WHERE email = $1`, [email]);
+    const { rows } = await client.query(`SELECT COUNT(*) FROM "user" WHERE email = $1`, [email]);
+    return rows[0].count > 0;
 }
 
 module.exports.pseudoExists = async (pseudo, client) => {
-    return await client.query(`SELECT COUNT(*) FROM "user" WHERE pseudo = $1`, [pseudo]);
+    const { rows } = await client.query(`SELECT COUNT(*) FROM "user" WHERE pseudo = $1`, [pseudo]);
+    return rows[0].count > 0;
 }

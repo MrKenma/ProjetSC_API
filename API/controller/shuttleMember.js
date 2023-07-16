@@ -208,11 +208,9 @@ module.exports.cancel = async (req, res) => {
     }
 }
 
-
-
 module.exports.deleteAllByPartier = async (req, res) => {
     const client = await pool.connect();
-    const partierid = req.params.partierid;
+    const partierid = parseInt(req.params.partierid);
 
     try {
 

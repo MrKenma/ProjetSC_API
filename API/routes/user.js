@@ -18,14 +18,15 @@ router.get('/emailExists/:email', UserController.emailExists);
 router.get('/pseudoExists/:pseudo', UserController.pseudoExists);
 
 router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.findAll);
-router.get('/:id', UserController.findOne);
-
-router.post('/', UserController.create);
-
-router.patch('/', UserController.update);
-router.delete('/:id', UserController.delete);
+router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.findOne);
 
 router.post('/register', upload.fields([{name : "profilePicture", maxCount: 1}, {name : "proof", maxCount: 1}]), UserController.register);
+router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.create);
+
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.update);
+router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.delete);
+
+
 
 // les route gets doivents avant la route '/:id' sinon express pense que par exemple login est un input de :id donc 400 car login is not a number
 

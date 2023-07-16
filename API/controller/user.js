@@ -10,6 +10,7 @@ const OrganizationModel = require('../model/organization');
 const ImageModel = require('../model/image');
 
 const { compareHash } = require('../utils/utils');
+const { decode } = require("punycode");
 
 /***************** CRUD for user *****************/
 
@@ -169,15 +170,16 @@ module.exports.delete = async (req, res) => {
 
 module.exports.emailExists = async (req, res) => {
     const client = await pool.connect();
-    const email = req.params.email;
+    const email = decodeURIComponent(req.params.email);
 
     try {
 
-        const { rows } = await UserModel.emailExists(email, client);
+        if (email === undefined) {
+            res.sendStatus(400);
+            return;
+        }
 
-        count = parseInt(rows[0].count);
-
-        res.json(count !== 0);
+        res.json(await UserModel.emailExists(email, client));
 
     } catch (error) {
 
@@ -191,15 +193,16 @@ module.exports.emailExists = async (req, res) => {
 
 module.exports.pseudoExists = async (req, res) => {
     const client = await pool.connect();
-    const pseudo = req.params.pseudo;
+    const pseudo = decodeURIComponent(req.params.pseudo);
 
     try {
 
-        const { rows } = await UserModel.pseudoExists(pseudo, client);
+        if (pseudo === undefined) {
+            res.sendStatus(400);
+            return;
+        }
 
-        count = parseInt(rows[0].count);
-
-        res.json(count !== 0);
+        res.json(await UserModel.pseudoExists(pseudo, client));
 
     } catch (error) {
 
@@ -216,12 +219,22 @@ module.exports.register = async (req, res) => {
 
     const { pseudo, email, password, phoneNumber } = req.body;
 
+    console.log(req.body);
+
     try {
 
         await client.query('BEGIN')
 
         if (pseudo === undefined || email === undefined || password === undefined || phoneNumber === undefined ) {
             res.sendStatus(400);
+            return;
+        }
+
+        const emailExists = await UserModel.emailExists(email, client);
+        const pseudoExists = await UserModel.pseudoExists(pseudo, client);
+
+        if (emailExists || pseudoExists) {
+            res.sendStatus(409);
             return;
         }
 
@@ -250,7 +263,6 @@ module.exports.register = async (req, res) => {
 
         } else {
             await client.query('ROLLBACK');
-            console.log('partier or organization is undefined');
             res.sendStatus(400);
             return;
         }      
@@ -270,13 +282,13 @@ module.exports.register = async (req, res) => {
 module.exports.login = async (req, res) => {
 
     const client = await pool.connect();
-    const { email, password } = req.query;
+    const email = decodeURIComponent(req.query.email);
+    const password = decodeURIComponent(req.query.password);
     let userRole;
 
     try {
 
         if (email === undefined || password === undefined) {
-            console.log('email or password is undefined');
             res.sendStatus(400);
             return;
         }
@@ -285,16 +297,11 @@ module.exports.login = async (req, res) => {
 
         const user = users[0];
 
-        console.log(user);
-
         if (user === undefined) {
             res.sendStatus(404);
             return;
         }
 
-        console.log(user.password)
-        console.log(password)
-        
         if (! await compareHash(password, user.password)) {
             res.sendStatus(401);
             return;
@@ -323,13 +330,11 @@ module.exports.login = async (req, res) => {
         }
 
         if (!user.isadmin && partier === undefined && organization === undefined) { 
-            res.sendStatus(404);
+            res.sendStatus(400);
             return;
         }
 
-        console.log(userRole);
-
-        const payload = {status : userRole, value : {id: user.id, email: user.email}};
+        const payload = {status : userRole, value : {id: user.id, email: user.email, pseudo: user.pseudo}};
         const token = jwt.sign(payload, process.env.SECRET_TOKEN, {expiresIn: '1d'});
         res.json({user, token});
     

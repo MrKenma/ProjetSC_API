@@ -2,14 +2,16 @@ const PartierController = require("../controller/partier");
 const Router = require("express-promise-router");
 const router = new Router;
 
-router.get('/', PartierController.findAll);
-router.get('/:id', PartierController.findOne);
+const IdentificationJWT = require('../middleware/IdentificationJWT');
+const Authorization = require('../middleware/Authorization');
 
-router.post('/', PartierController.create);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.findAll);
 
-router.patch('/', PartierController.update);
+router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.create);
 
-router.delete('/:id', PartierController.delete);
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, PartierController.update);
+
+router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.delete);
 
 /* router.post('/emailExists', PartierController.emailExists);
 router.get('/getPartier/:id', PartierController.getPartier);

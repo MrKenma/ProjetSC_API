@@ -2,15 +2,17 @@ const OrganizationController = require("../controller/organization");
 const Router = require("express-promise-router");
 const router = new Router;
 
+const IdentificationJWT = require('../middleware/IdentificationJWT');
+const Authorization = require('../middleware/Authorization');
 
-router.get('/', OrganizationController.findAll);
-router.get('/:id', OrganizationController.findOne);
 
-router.post('/', OrganizationController.create);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.findAll);
 
-router.patch('/', OrganizationController.update);
+router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.create);
 
-router.delete('/:id', OrganizationController.delete);
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.update);
+
+router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.delete);
 
 /* router.get('/', OrganizationController.findAll);
 router.get('/nameExists/:name', OrganizationController.nameExists);
