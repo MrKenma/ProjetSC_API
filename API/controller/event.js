@@ -9,13 +9,13 @@ const ShuttleMemberORM = require('../ORM/model/shuttleMember');
 
 
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllEvents = async (req, res) => {
 
     const client = await pool.connect();
 
     try {
 
-        const {rows: events} = await EventModel.findAll(client);
+        const {rows: events} = await EventModel.getAllEvents(client);
 
         if (events === undefined) {
             res.sendStatus(404);
@@ -34,7 +34,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.findOne = async (req, res) => {
+module.exports.getEvent = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
@@ -45,7 +45,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
 
-        const {rows: events} = await EventModel.findOne(id, client);
+        const {rows: events} = await EventModel.getEvent(id, client);
 
         const event = events[0];
 
@@ -66,7 +66,7 @@ module.exports.findOne = async (req, res) => {
     }
 }
 
-module.exports.create = async (req, res) => {
+module.exports.postEvent = async (req, res) => {
     const client = await pool.connect();
     // all lowercase variables names
     const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode } = req.body;
@@ -81,7 +81,7 @@ module.exports.create = async (req, res) => {
             return;
         }
 
-        const { rows: events } = await EventModel.create(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
+        const { rows: events } = await EventModel.postEvent(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
         res.sendStatus(201);
 
     } catch (error) {
@@ -92,10 +92,10 @@ module.exports.create = async (req, res) => {
     }
 }
 
-module.exports.update = async (req, res) => {
+module.exports.updateEvent = async (req, res) => {
 }
 
-module.exports.delete = async (req, res) => {
+module.exports.deleteEvent = async (req, res) => {
 }
 
 module.exports.nameExists = async (req, res) => {
@@ -122,7 +122,7 @@ module.exports.nameExists = async (req, res) => {
 
 }
         
-module.exports.findManyByOrganization = async (req, res) => {
+module.exports.getEventsByOrganization = async (req, res) => {
     const client = await pool.connect();
 
     try {
@@ -133,7 +133,7 @@ module.exports.findManyByOrganization = async (req, res) => {
             return;
         }
 
-        const {rows: events} = await EventModel.findManyByOrganization(organizationId, client);
+        const {rows: events} = await EventModel.getEventsByOrganization(organizationId, client);
 
         if (events === undefined) {
             res.sendStatus(404);

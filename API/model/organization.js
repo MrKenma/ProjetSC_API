@@ -1,20 +1,20 @@
-module.exports.findAll = async (client) => {
+module.exports.getAllOrganizations = async (client) => {
     return await client.query(`SELECT * FROM organization`);
 }
 
-module.exports.findOne = async (id, client) => {
+module.exports.getOrganization = async (id, client) => {
     return await client.query(`SELECT * FROM organization WHERE userid = $1`, [id]);
 }
 
-module.exports.create = async (userID, responsibleName, isVerified, client) => {
+module.exports.postOrganization = async (userID, responsibleName, isVerified, client) => {
     return await client.query(`INSERT INTO organization (userid, responsiblename, isverified) VALUES ($1, $2, $3)`, [userID, responsibleName, isVerified]);
 }
 
-module.exports.update = async (userID, responsibleName, isVerified, client) => {
+module.exports.updateOrganization = async (userID, responsibleName, isVerified, client) => {
     return await client.query(`UPDATE organization SET responsiblename = $2, isverified = $3 WHERE userid = $1`, [userID, responsibleName, isVerified]);
 }
 
-module.exports.delete = async (id, client) => {
+module.exports.deleteOrganization = async (id, client) => {
     return await client.query(`DELETE FROM organization WHERE id = $1`, [id]);
 }
 

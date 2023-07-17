@@ -2,7 +2,7 @@ const pool = require('../model/database');
 const ShuttleMemberModel = require('../model/shuttleMember');
 const ShuttleModel = require('../model/shuttle');
 
-module.exports.findOne = async (req, res) => {
+module.exports.getShuttleMember = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
@@ -13,7 +13,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
         
-        const {rows: shuttleMembers} = await ShuttleMemberModel.findOne(id, client);
+        const {rows: shuttleMembers} = await ShuttleMemberModel.getShuttleMember(id, client);
 
         const shuttleMember = shuttleMembers[0];
 
@@ -34,11 +34,11 @@ module.exports.findOne = async (req, res) => {
     }
 }
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllShuttleMembers = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const {rows: shuttleMembers} = await ShuttleMemberModel.findAll(client);
+        const {rows: shuttleMembers} = await ShuttleMemberModel.getAllShuttleMembers(client);
 
         if (shuttleMembers === undefined) {
             res.sendStatus(404);
@@ -54,7 +54,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.update = async (req, res) => {
+module.exports.updateShuttleMember = async (req, res) => {
     const client = await pool.connect();
     const { hasvalidated, hasarrivedsafely } = req.body;
 
@@ -68,7 +68,7 @@ module.exports.update = async (req, res) => {
             return;
         }
 
-        const { rows: shuttleMembers } = await ShuttleMemberModel.findOne(shuttleid, partierid, client);
+        const { rows: shuttleMembers } = await ShuttleMemberModel.getShuttleMember(shuttleid, partierid, client);
 
         const shuttleMember = shuttleMembers[0];
 
@@ -77,13 +77,13 @@ module.exports.update = async (req, res) => {
             return;
         }
 
-        const updatedHasValidated = hasvalidated !== undefined ? hasvalidated : shuttleMember.hasvalidated;
-        const updatedHasArrivedSafely = hasarrivedsafely !== undefined ? hasarrivedsafely : shuttleMember.hasarrivedsafely;
+        const updateShuttleMemberdHasValidated = hasvalidated !== undefined ? hasvalidated : shuttleMember.hasvalidated;
+        const updateShuttleMemberdHasArrivedSafely = hasarrivedsafely !== undefined ? hasarrivedsafely : shuttleMember.hasarrivedsafely;
 
-        await ShuttleMemberModel.update(updatedHasValidated, updatedHasArrivedSafely, shuttleid, partierid, client);
+        await ShuttleMemberModel.updateShuttleMember(updateShuttleMemberdHasValidated, updateShuttleMemberdHasArrivedSafely, shuttleid, partierid, client);
 
 
-        console.log(updatedHasValidated, updatedHasArrivedSafely, shuttleid, partierid);
+        console.log(updateShuttleMemberdHasValidated, updateShuttleMemberdHasArrivedSafely, shuttleid, partierid);
 
         res.sendStatus(204);
 
@@ -117,7 +117,7 @@ module.exports.signup = async (req, res) => {
 
         if (oldshuttleid !== -1) {
 
-            const { rows : shuttles} = await ShuttleModel.findOne(oldshuttleid, client);
+            const { rows : shuttles} = await ShuttleModel.getShuttleMember(oldshuttleid, client);
 
             const shuttle = shuttles[0];
 
@@ -133,13 +133,13 @@ module.exports.signup = async (req, res) => {
 
         }
 
-        const { rows : shuttles } = await ShuttleModel.findOneByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
+        const { rows : shuttles } = await ShuttleModel.getShuttleMemberByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
 
         let shuttle = shuttles[0];
 
         if (shuttle === undefined) {
 
-            const { rows : shuttles } = await ShuttleModel.create(departuretime, eventid, destinationtown, destinationzipcode, client);
+            const { rows : shuttles } = await ShuttleModel.postShuttle(departuretime, eventid, destinationtown, destinationzipcode, client);
             
             shuttle = shuttles[0];
 
@@ -149,7 +149,7 @@ module.exports.signup = async (req, res) => {
             }
         } 
 
-        const { rows : shuttleMembers } = await ShuttleMemberModel.create(false, false, shuttle.id, partierid, client);
+        const { rows : shuttleMembers } = await ShuttleMemberModel.postShuttleMember(false, false, shuttle.id, partierid, client);
 
         const shuttleMember = shuttleMembers[0];
 
@@ -186,7 +186,7 @@ module.exports.cancel = async (req, res) => {
             return;
         }
 
-        const { rows : shuttleMembers } = await ShuttleMemberModel.findOne(shuttleid, partierid, client);
+        const { rows : shuttleMembers } = await ShuttleMemberModel.getShuttleMember(shuttleid, partierid, client);
 
         const shuttleMember = shuttleMembers[0];
 

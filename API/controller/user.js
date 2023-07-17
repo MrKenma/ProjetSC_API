@@ -14,7 +14,7 @@ const { decode } = require("punycode");
 
 /***************** CRUD for user *****************/
 
-module.exports.create = async (req, res) => {
+module.exports.postUser = async (req, res) => {
     const client = await pool.connect();
     const {email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin } = req.body;
 
@@ -25,7 +25,7 @@ module.exports.create = async (req, res) => {
             return;
         }
 
-        await UserModel.create(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client);
+        await UserModel.postTown(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client);
 
         res.sendStatus(201);
 
@@ -41,12 +41,12 @@ module.exports.create = async (req, res) => {
 
 }
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllUsers = async (req, res) => {
     const client = await pool.connect();
 
     try {
 
-        const {rows: users} = await UserModel.findAll(client);
+        const {rows: users} = await UserModel.getAllUsers(client);
 
         if (users === undefined) {
             res.sendStatus(404);
@@ -67,7 +67,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.findOne = async (req, res) => {
+module.exports.getUser = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
@@ -79,7 +79,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
             
-        const {rows: users} = await UserModel.findOne(id, client);
+        const {rows: users} = await UserModel.getUser(id, client);
 
         const user = users[0];
 
@@ -100,12 +100,12 @@ module.exports.findOne = async (req, res) => {
     }
 }
 
-module.exports.update = async (req, res) => {
+module.exports.updateUser = async (req, res) => {
     const client = await pool.connect();
     const { id } = req.body;
     
     try {
-        const {rows: users} = await UserModel.findOne(id, client);
+        const {rows: users} = await UserModel.getUser(id, client);
 
         const user = users[0];
 
@@ -123,7 +123,7 @@ module.exports.update = async (req, res) => {
         const newHasUploadedProfilePicture = req.body.hasUploadedProfilePicture === undefined ? hasUploadedProfilePicture : req.body.hasUploadedProfilePicture;
         const newIsAdmin = req.body.isAdmin === undefined ? isAdmin : req.body.isAdmin;
 
-        await UserModel.update(id, newEmail, newPassword, newPseudo, newPhoneNumber, newHasUploadedProfilePicture, newIsAdmin, client);
+        await UserModel.updateUser(id, newEmail, newPassword, newPseudo, newPhoneNumber, newHasUploadedProfilePicture, newIsAdmin, client);
 
         res.sendStatus(200);
 
@@ -141,7 +141,7 @@ module.exports.update = async (req, res) => {
 
 }
 
-module.exports.delete = async (req, res) => {
+module.exports.deleteUser = async (req, res) => {
 
     const client = await pool.connect();
 
@@ -154,7 +154,7 @@ module.exports.delete = async (req, res) => {
             return;
         }
 
-        await UserModel.delete(id, client);
+        await UserModel.deleteUser(id, client);
 
         res.sendStatus(204);
 
@@ -243,7 +243,7 @@ module.exports.register = async (req, res) => {
         if (hasUploadedProfilePicture) 
             await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture', "jpeg");
             
-        const result  = await UserModel.create(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
+        const result  = await UserModel.postTown(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
 
         const userID = result.rows[0].id;
 
@@ -251,13 +251,13 @@ module.exports.register = async (req, res) => {
 
             const { firstName, lastName, refPhoneNumber, addressTown, addressZipCode } = JSON.parse(req.body.partier);
 
-            await PartierModel.create(userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode, client);
+            await PartierModel.postTown(userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode, client);
 
         } else if (req.body.organization !== undefined) {
 
             const { responsibleName } = JSON.parse(req.body.organization);
 
-            await OrganizationModel.create(userID, responsibleName, false, client);
+            await OrganizationModel.postTown(userID, responsibleName, false, client);
 
             await ImageModel.savePDF(req.files.proof[0].buffer, email, './public/proof');
 
@@ -293,7 +293,7 @@ module.exports.login = async (req, res) => {
             return;
         }
 
-        const {rows: users} = await UserModel.findOneByEmail(email, client);
+        const {rows: users} = await UserModel.getUserByEmail(email, client);
 
         const user = users[0];
 
@@ -307,7 +307,7 @@ module.exports.login = async (req, res) => {
             return;
         }
 
-        const {rows: partiers} = await PartierModel.findOne(user.id, client);
+        const {rows: partiers} = await PartierModel.getPartier(user.id, client);
 
         const partier = partiers[0];
 
@@ -316,7 +316,7 @@ module.exports.login = async (req, res) => {
             userRole = 'partier';
         }
 
-        const {rows: organizations} = await OrganizationModel.findOne(user.id, client);
+        const {rows: organizations} = await OrganizationModel.getOrganization(user.id, client);
 
         const organization = organizations[0];
 

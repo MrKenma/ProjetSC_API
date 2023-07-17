@@ -1,24 +1,24 @@
-module.exports.create = async (hasvalidated, hasarrivedsafely, shuttleid, partierid, client) => {
+module.exports.postShuttleMember = async (hasvalidated, hasarrivedsafely, shuttleid, partierid, client) => {
     return await client.query('INSERT INTO shuttleMember (hasvalidated, hasarrivedsafely, shuttleid, partierid) VALUES ($1, $2, $3, $4) RETURNING shuttleid, partierid', [hasvalidated, hasarrivedsafely, shuttleid, partierid]);
 }
 
-module.exports.findAll = async (client) => {
+module.exports.getAllShuttleMembers = async (client) => {
     return await client.query('SELECT * FROM shuttleMember');
 }
 
-module.exports.findOne = async (shuttleid, partierid, client) => {
+module.exports.getShuttleMembers = async (shuttleid, partierid, client) => {
     return await client.query('SELECT * FROM shuttleMember WHERE shuttleid = $1 AND partierid = $2', [shuttleid, partierid]);
 }
 
-module.exports.findOneByShuttleID = async (shuttleid, client) => {
+module.exports.getShuttleByShuttleID = async (shuttleid, client) => {
     return await client.query('SELECT * FROM shuttleMember WHERE shuttleid = $1', [shuttleid]);
 }
 
-module.exports.update = async (hasvalidated, hasarrivedsafely, shuttleid, partierid, client) => {
+module.exports.updateShuttleMember = async (hasvalidated, hasarrivedsafely, shuttleid, partierid, client) => {
     return await client.query('UPDATE shuttleMember SET hasvalidated = $1, hasarrivedsafely = $2 WHERE shuttleid = $3 AND partierid = $4 RETURNING shuttleid, partierid', [hasvalidated, hasarrivedsafely, shuttleid, partierid]);
 }
 
-module.exports.delete = async (shuttleid, partierid, client) => {
+module.exports.deleteShuttleMember = async (shuttleid, partierid, client) => {
     return await client.query('DELETE FROM shuttleMember WHERE shuttleid = $1 AND partierid = $2', [shuttleid, partierid]);
 }
 

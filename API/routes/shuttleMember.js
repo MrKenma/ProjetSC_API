@@ -5,11 +5,11 @@ const router = new Router;
 const IdentificationJWT = require('../middleware/IdentificationJWT');
 const Authorization = require('../middleware/Authorization');
 
-router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.findAll);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.getAllShuttleMembers);
 
 router.post('/signup', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.signup);
 
-router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.update);
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.updateShuttleMember);
 
 router.delete('/cancel/:shuttleid/:partierid', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.cancel);
 router.delete('/partier/:partierid', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleMemberController.deleteAllByPartier);

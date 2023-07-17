@@ -7,12 +7,12 @@ const PartierORM = require('../ORM/model/partier');
 const UserORM = require('../ORM/model/user');
 const EventORM = require('../ORM/model/event');
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllShuttles = async (req, res) => {
     const client = await pool.connect();
 
     try {
 
-        const {rows: shuttles} = await ShuttleModel.findAll(client);
+        const {rows: shuttles} = await ShuttleModel.getAllShuttles(client);
 
         if (shuttles === undefined) {
             res.sendStatus(404);
@@ -33,7 +33,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.findOne = async (req, res) => {
+module.exports.getShuttle = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
@@ -44,7 +44,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
         
-        const {rows: shuttles} = await ShuttleModel.findOne(id, client);
+        const {rows: shuttles} = await ShuttleModel.getShuttle(id, client);
 
         const shuttle = shuttles[0];
 
@@ -80,7 +80,7 @@ module.exports.search = async (req, res) => {
             return;
         }
 
-        // findAll shuttle by event with all shuttleMember includes
+        // getAllShuttles shuttle by event with all shuttleMember includes
         const shuttles = await ShuttleORM.findAll({
             where: {
                 eventid: eventid,
@@ -133,7 +133,6 @@ module.exports.search2 = async (req, res) => {
             return;
         }
 
-        //findAll shuttle by partier with all shuttleMember includes
         const shuttles = await ShuttleORM.findAll({
             include: [
                 {
@@ -170,12 +169,12 @@ module.exports.search2 = async (req, res) => {
 }
 
 
-module.exports.create = async (req, res) => {
+module.exports.postShuttle = async (req, res) => {
     const client = await pool.connect();
     const { departureTime, eventID, destinationTown, destinationZipCode} = req.body;
 
     try {
-        const {rows: shuttles} = await ShuttleModel.create(req.body, client);
+        const {rows: shuttles} = await ShuttleModel.postShuttle(req.body, client);
 
         const shuttle = shuttles[0];
 

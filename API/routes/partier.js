@@ -5,13 +5,13 @@ const router = new Router;
 const IdentificationJWT = require('../middleware/IdentificationJWT');
 const Authorization = require('../middleware/Authorization');
 
-router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.findAll);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.getAllPartiers);
 
-router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.create);
+router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.postPartier);
 
-router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, PartierController.update);
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, PartierController.updatePartier);
 
-router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.delete);
+router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, PartierController.deletePartier);
 
 /* router.post('/emailExists', PartierController.emailExists);
 router.get('/getPartier/:id', PartierController.getPartier);

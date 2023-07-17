@@ -4,11 +4,11 @@ const PartierModel = require('../model/partier');
 
 /***************** CRUD for partier *****************/
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllPartiers = async (req, res) => {
     const client = await pool.connect();
     
     try {
-        const {rows: partiers} = await PartierModel.findAll(client);
+        const {rows: partiers} = await PartierModel.getAllPartiers(client);
 
         if (partiers === undefined) {
             res.sendStatus(404);
@@ -24,7 +24,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.findOne = async (req, res) => {
+module.exports.getPartier = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
 
@@ -35,7 +35,7 @@ module.exports.findOne = async (req, res) => {
             return;
         }
 
-        const {rows : partiers} = await PartierModel.findOne(id, client);
+        const {rows : partiers} = await PartierModel.getPartier(id, client);
 
         const partier = partiers[0];
 
@@ -56,7 +56,7 @@ module.exports.findOne = async (req, res) => {
     }
 }
 
-module.exports.create = async (req, res) => {
+module.exports.postPartier = async (req, res) => {
     const client = await pool.connect();
     const { userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode } = req.body;
 
@@ -67,7 +67,7 @@ module.exports.create = async (req, res) => {
             return;
         }
 
-        await PartierModel.create(userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode, client);
+        await PartierModel.postPartier(userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode, client);
 
         res.sendStatus(201);
 
@@ -79,7 +79,7 @@ module.exports.create = async (req, res) => {
     }
 }
 
-module.exports.update = async (req, res) => {
+module.exports.updatePartier = async (req, res) => {
     const client = await pool.connect();
     const { userid } = req.body;
 
@@ -92,7 +92,7 @@ module.exports.update = async (req, res) => {
             return;
         }
 
-        const {rows: partiers} = await PartierModel.findOne(userid, client);
+        const {rows: partiers} = await PartierModel.getPartier(userid, client);
 
         const partier = partiers[0];
 
@@ -110,7 +110,7 @@ module.exports.update = async (req, res) => {
         const newAddressZipCode = req.body.addresszipcode === undefined ? addressZipCode : req.body.addresszipcode;
 
 
-        await PartierModel.update(userid, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);
+        await PartierModel.updatePartier(userid, newFirstName, newLastName, newReferencePhoneNumber, newAddressTown, newAddressZipCode, client);
 
         res.sendStatus(200);
 
@@ -122,7 +122,7 @@ module.exports.update = async (req, res) => {
     }
 }
 
-module.exports.delete = async (req, res) => {
+module.exports.deletePartier = async (req, res) => {
 
     const client = await pool.connect();
     const userID = req.params.id;
@@ -134,7 +134,7 @@ module.exports.delete = async (req, res) => {
             return;
         }
 
-        await PartierModel.delete(userID, client);
+        await PartierModel.deletePartier(userID, client);
        
     } catch (error) {
         console.error(error);

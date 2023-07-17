@@ -3,12 +3,12 @@ const TownModel = require('../model/town');
 
 /***************** CRUD for town *****************/
 
-module.exports.findAll = async (req, res) => {
+module.exports.getAllTowns = async (req, res) => {
     const client = await pool.connect();
 
     try {
 
-        const {rows: towns} = await TownModel.findAll(client);
+        const {rows: towns} = await TownModel.getAllTowns(client);
 
         if (towns === undefined) {
             res.sendStatus(404);
@@ -29,7 +29,7 @@ module.exports.findAll = async (req, res) => {
     }
 }
 
-module.exports.create = async (req, res) => {
+module.exports.postTown = async (req, res) => {
     const client = await pool.connect();
     const { name, zipCode } = req.body;
 
@@ -42,7 +42,7 @@ module.exports.create = async (req, res) => {
             
         }
 
-        await TownModel.create(name, zipCode, client);
+        await TownModel.postTown(name, zipCode, client);
 
         res.sendStatus(201);
 
@@ -58,7 +58,7 @@ module.exports.create = async (req, res) => {
     }
 }
 
-module.exports.delete = async (req, res) => {
+module.exports.deleteTown = async (req, res) => {
     const client = await pool.connect();
     const { name, zipCode } = req.query;
 
@@ -69,7 +69,7 @@ module.exports.delete = async (req, res) => {
             return;
         }
 
-        await TownModel.delete(name, zipCode, client);
+        await TownModel.deleteTown(name, zipCode, client);
 
     } catch (error) {
 

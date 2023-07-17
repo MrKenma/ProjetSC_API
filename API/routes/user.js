@@ -17,14 +17,14 @@ router.get('/login', UserController.login);
 router.get('/emailExists/:email', UserController.emailExists);
 router.get('/pseudoExists/:pseudo', UserController.pseudoExists);
 
-router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.findAll);
-router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.findOne);
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.getAllUsers);
+router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.getUser);
 
 router.post('/register', upload.fields([{name : "profilePicture", maxCount: 1}, {name : "proof", maxCount: 1}]), UserController.register);
-router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.create);
+router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.postUser);
 
-router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.update);
-router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.delete);
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.updateUser);
+router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.deleteUser);
 
 
 

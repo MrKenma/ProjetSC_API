@@ -6,12 +6,8 @@ const ShuttleModel = require('../model/shuttle');
 
 const pool = require('../model/database');
 
-
-const { Op } = require('sequelize');
-
-//Give me cron string for every second : 
-
-module.exports.job = new CronJob('0/5 * * * * *', async function() {
+// each minute starting at 0 seconds
+module.exports.job = new CronJob('0 * * * * *', async function() {
 
     const client = await pool.connect();
     
@@ -27,9 +23,11 @@ module.exports.job = new CronJob('0/5 * * * * *', async function() {
             ]
         });
     
+        // Convert to JSON, because Sequelize objects are not iterable if not returned by a res.json()
         const shuttles = data.map(shuttle => shuttle.toJSON());
 
         shuttles.forEach(shuttle => {
+
             const departureTime = new Date(shuttle.departuretime);
 
             shuttle.shuttlemembers.forEach(shuttleMember => {
@@ -38,12 +36,20 @@ module.exports.job = new CronJob('0/5 * * * * *', async function() {
                 if (!shuttleMember.hasvalidated) {
 
                     if (now > new Date(departureTime.getTime() + 10 * 60000)) {
-                        ShuttleMemberModel.delete(shuttleMember.shuttleid, shuttleMember.partierid, client);
+
+                        // Delete automatically shuttle member if he didn't validate his presence
+
+                        ShuttleMemberModel.deleteShuttleMember(shuttleMember.shuttleid, shuttleMember.partierid, client);
                         ShuttleModel.deleteEmptyShuttle(shuttleMember.shuttleid, client);
+
                     } else if (now > new Date(departureTime.getTime() - 15 * 60000)) {
+
                         // Send first reminder
+
                     } else if (now > new Date(departureTime.getTime() - 5 * 60000)) {
+
                         // Send second reminder
+
                     }
 
                 }
