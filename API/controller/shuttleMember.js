@@ -117,7 +117,7 @@ module.exports.signup = async (req, res) => {
 
         if (oldshuttleid !== -1) {
 
-            const { rows : shuttles} = await ShuttleModel.getShuttleMember(oldshuttleid, client);
+            const { rows : shuttles} = await ShuttleModel.getShuttle(oldshuttleid, client);
 
             const shuttle = shuttles[0];
 
@@ -126,14 +126,14 @@ module.exports.signup = async (req, res) => {
                 return;
             }
 
-            await ShuttleMemberModel.delete(shuttle.id, partierid, client);
+            await ShuttleMemberModel.deleteShuttleMember(shuttle.id, partierid, client);
 
             
             await ShuttleModel.deleteEmptyShuttle(shuttle.id, client);
 
         }
 
-        const { rows : shuttles } = await ShuttleModel.getShuttleMemberByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
+        const { rows : shuttles } = await ShuttleModel.getShuttleByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
 
         let shuttle = shuttles[0];
 

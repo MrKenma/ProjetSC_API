@@ -93,9 +93,84 @@ module.exports.postEvent = async (req, res) => {
 }
 
 module.exports.updateEvent = async (req, res) => {
+    const client = await pool.connect();
+    const id = parseInt(req.body.id);
+
+    try {
+
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const { rows : events } = await EventModel.getEvent(id, client);
+
+        const event = events[0];
+
+        if (event === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode } = req.body;
+
+        const updatedEvent = [
+            name || event.name,
+            description || event.description,
+            nameandnumstreet || event.nameandnumstreet,
+            departingpoint || event.departingpoint,
+            startdatetime || event.startdatetime,
+            enddatetime || event.enddatetime,
+            organizationid || event.organizationid,
+            addresstown || event.addresstown,
+            addresszipcode || event.addresszipcode
+        ]
+
+        await EventModel.updateEvent(id, ...updatedEvent, client);
+        res.sendStatus(204);
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
 }
 
 module.exports.deleteEvent = async (req, res) => {
+    const client = await pool.connect();
+    const id = parseInt(req.params.id);
+
+    try {
+
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
+        }
+
+        const { rows: events } = EventModel.getEvent(id, client);
+
+        const event = events[0];
+
+        if (event === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
+        await EventModel.deleteEvent(id, client);
+        res.sendStatus(204); 
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
+
 }
 
 module.exports.nameExists = async (req, res) => {

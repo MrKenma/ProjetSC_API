@@ -15,7 +15,7 @@ module.exports.postEvent = async (name, description, nameandnumstreet, departing
     return await client.query(`INSERT INTO event (name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`, [name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode]);
 }
 
-module.exports.updateEvente = async (id, name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode, organizationid, client) => {
+module.exports.updateEvent = async (id, name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client) => {
     return await client.query(`UPDATE event SET name = $1, description = $2, nameandnumstreet = $3, departingpoint = $4, startdatetime = $5, enddatetime = $6, addresstown = $7, addresszipcode = $8, organizationid = $9 WHERE id = $10`, [name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode, organizationid, id]);
 }
 

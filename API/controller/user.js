@@ -11,6 +11,7 @@ const ImageModel = require('../model/image');
 
 const { compareHash } = require('../utils/utils');
 const { decode } = require("punycode");
+const { parse } = require("path");
 
 /***************** CRUD for user *****************/
 
@@ -102,9 +103,15 @@ module.exports.getUser = async (req, res) => {
 
 module.exports.updateUser = async (req, res) => {
     const client = await pool.connect();
-    const { id } = req.body;
+    const id = parseInt(req.body.id);
     
     try {
+
+        if (isNaN(id)) {
+            res.sendStatus(400);
+            return;
+        }
+
         const {rows: users} = await UserModel.getUser(id, client);
 
         const user = users[0];
@@ -114,18 +121,20 @@ module.exports.updateUser = async (req, res) => {
             return;
         }
 
-        const { email, password, pseudo, phonenumber: phoneNumber, hasuploadedprofilepicture : hasUploadedProfilePicture, isadmin : isAdmin } = user;
+        const { email, password, pseudo, phonenumber, hasuploadedprofilepicture, isadmin } = req.body;
 
-        const newEmail = req.body.email === undefined ? email : req.body.email;
-        const newPassword = req.body.password === undefined ? password : req.body.password;
-        const newPseudo = req.body.pseudo === undefined ? pseudo : req.body.pseudo;
-        const newPhoneNumber = req.body.phoneNumber === undefined ? phoneNumber : req.body.phoneNumber;
-        const newHasUploadedProfilePicture = req.body.hasUploadedProfilePicture === undefined ? hasUploadedProfilePicture : req.body.hasUploadedProfilePicture;
-        const newIsAdmin = req.body.isAdmin === undefined ? isAdmin : req.body.isAdmin;
+        const updateUser = [
+            email || user.email,
+            password || user.password,
+            pseudo || user.pseudo,
+            phonenumber || user.phonenumber,
+            hasuploadedprofilepicture || user.hasuploadedprofilepicture,
+            isadmin || user.isadmin
+        ]
 
-        await UserModel.updateUser(id, newEmail, newPassword, newPseudo, newPhoneNumber, newHasUploadedProfilePicture, newIsAdmin, client);
+        await UserModel.updateUser(id, ...updateUser, client);
 
-        res.sendStatus(200);
+        res.sendStatus(204);
 
     } catch (error) {
 
