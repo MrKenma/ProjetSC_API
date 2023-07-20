@@ -68,11 +68,9 @@ module.exports.getEvent = async (req, res) => {
 
 module.exports.postEvent = async (req, res) => {
     const client = await pool.connect();
-    // all lowercase variables names
+    
     const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode } = req.body;
     const organizationid = parseInt(req.body.organizationid);
-
-    console.log(req.body);
 
     try {
 
@@ -81,7 +79,7 @@ module.exports.postEvent = async (req, res) => {
             return;
         }
 
-        const { rows: events } = await EventModel.postEvent(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
+        await EventModel.postEvent(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
         res.sendStatus(201);
 
     } catch (error) {

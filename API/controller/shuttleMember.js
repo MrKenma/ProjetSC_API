@@ -135,33 +135,14 @@ module.exports.signup = async (req, res) => {
 
         const { rows : shuttles } = await ShuttleModel.getShuttleByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
 
-        let shuttle = shuttles[0];
+        const shuttle = shuttles[0];
 
-        if (shuttle === undefined) {
+        if (shuttle === undefined) await ShuttleModel.postShuttle(departuretime, eventid, destinationtown, destinationzipcode, client);
+        
+        await ShuttleMemberModel.postShuttleMember(false, false, shuttle.id, partierid, client);
 
-            const { rows : shuttles } = await ShuttleModel.postShuttle(departuretime, eventid, destinationtown, destinationzipcode, client);
-            
-            shuttle = shuttles[0];
+        res.sendStatus(201);
 
-            if (shuttle === undefined) {
-                res.sendStatus(404);
-                return;
-            }
-        } 
-
-        const { rows : shuttleMembers } = await ShuttleMemberModel.postShuttleMember(false, false, shuttle.id, partierid, client);
-
-        const shuttleMember = shuttleMembers[0];
-
-        if (shuttleMember === undefined) {
-
-            await client.query('ROLLBACK');
-
-            res.sendStatus(404);
-            return;
-        }
-
-        res.json(shuttleMember);
     } catch (error) {
         await client.query('ROLLBACK');
         console.error(error);
