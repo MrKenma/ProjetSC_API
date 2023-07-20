@@ -128,16 +128,18 @@ module.exports.signup = async (req, res) => {
 
             await ShuttleMemberModel.deleteShuttleMember(shuttle.id, partierid, client);
 
-            
             await ShuttleModel.deleteEmptyShuttle(shuttle.id, client);
 
         }
 
         const { rows : shuttles } = await ShuttleModel.getShuttleByDetails(departuretime, eventid, destinationtown, destinationzipcode, client);
 
-        const shuttle = shuttles[0];
+        let shuttle = shuttles[0];
 
-        if (shuttle === undefined) await ShuttleModel.postShuttle(departuretime, eventid, destinationtown, destinationzipcode, client);
+        if (shuttle === undefined) {
+            const { rows : newShuttle } = await ShuttleModel.postShuttle(departuretime, eventid, destinationtown, destinationzipcode, client);
+            shuttle = newShuttle[0];
+        } 
         
         await ShuttleMemberModel.postShuttleMember(false, false, shuttle.id, partierid, client);
 
