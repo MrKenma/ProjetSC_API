@@ -242,8 +242,13 @@ module.exports.register = async (req, res) => {
         const emailExists = await UserModel.emailExists(email, client);
         const pseudoExists = await UserModel.pseudoExists(pseudo, client);
 
-        if (emailExists || pseudoExists) {
-            res.sendStatus(409);
+        if (emailExists) {
+            res.status(409).send('Email already exists');
+            return;
+        }
+
+        if (pseudoExists) {
+            res.status(409).send('Pseudo already exists');
             return;
         }
 
@@ -307,12 +312,12 @@ module.exports.login = async (req, res) => {
         const user = users[0];
 
         if (user === undefined) {
-            res.sendStatus(404);
+            res.status(404).send('Email not found');
             return;
         }
 
         if (! await compareHash(password, user.password)) {
-            res.sendStatus(401);
+            res.status(401).send('Wrong password');
             return;
         }
 
