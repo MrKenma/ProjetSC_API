@@ -257,7 +257,7 @@ module.exports.register = async (req, res) => {
         if (hasUploadedProfilePicture) 
             await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture', "jpeg");
             
-        const result  = await UserModel.postTown(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
+        const result  = await UserModel.postUser(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
 
         const userID = result.rows[0].id;
 
@@ -265,13 +265,25 @@ module.exports.register = async (req, res) => {
 
             const { firstName, lastName, refPhoneNumber, addressTown, addressZipCode } = JSON.parse(req.body.partier);
 
-            await PartierModel.postTown(userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode, client);
+            if (firstName === undefined || lastName === undefined || refPhoneNumber === undefined || addressTown === undefined || addressZipCode === undefined) {
+                await client.query('ROLLBACK');
+                res.sendStatus(400);
+                return;
+            }
+            
+            await PartierModel.postPartier(userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode, client);
 
         } else if (req.body.organization !== undefined) {
 
             const { responsibleName } = JSON.parse(req.body.organization);
+            
+            if (responsibleName === undefined) {
+                await client.query('ROLLBACK');
+                res.sendStatus(400);
+                return;
+            }
 
-            await OrganizationModel.postTown(userID, responsibleName, false, client);
+            await OrganizationModel.postOrganization(userID, responsibleName, false, client);
 
             await ImageModel.savePDF(req.files.proof[0].buffer, email, './public/proof');
 
