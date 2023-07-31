@@ -79,6 +79,13 @@ module.exports.postEvent = async (req, res) => {
             return;
         }
 
+        const nameExists = await EventModel.nameExists(name, client);
+
+        if (nameExists) {
+            res.status(409).send('Event name already exists');
+            return;
+        }
+
         await EventModel.postEvent(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
         res.sendStatus(201);
 

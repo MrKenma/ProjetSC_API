@@ -132,6 +132,15 @@ module.exports.deletePartier = async (req, res) => {
             return;
         }
 
+        const {rows: partiers} = await PartierModel.getPartier(userID, client);
+
+        const partier = partiers[0];
+
+        if (partier === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
         await PartierModel.deletePartier(userID, client);
        
     } catch (error) {

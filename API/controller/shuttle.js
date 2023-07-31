@@ -65,12 +65,12 @@ module.exports.getShuttle = async (req, res) => {
     }
 }
 
-module.exports.search = async (req, res) => {
+module.exports.searchByDetails = async (req, res) => {
     const client = await pool.connect();
 
-    const eventid = parseInt(req.query.eventid);
-    const destinationtown = req.query.destinationtown;
-    const destinationzipcode = req.query.destinationzipcode;
+    const eventid = parseInt(req.params.eventid);
+    const destinationtown = req.params.destinationtown;
+    const destinationzipcode = req.params.destinationzipcode;
 
     try {
 
@@ -80,7 +80,7 @@ module.exports.search = async (req, res) => {
             return;
         }
 
-        // getAllShuttles shuttle by event with all shuttleMember includes
+        
         const shuttles = await ShuttleORM.findAll({
             where: {
                 eventid: eventid,
@@ -121,9 +121,9 @@ module.exports.search = async (req, res) => {
     }
 }
 
-module.exports.search2 = async (req, res) => {
+module.exports.searchByPartier = async (req, res) => {
 
-    const partierid = parseInt(req.query.partierid);
+    const partierid = parseInt(req.params.partierid);
 
     try {
 

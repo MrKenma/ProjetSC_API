@@ -10,8 +10,8 @@ const Authorization = require('../middleware/Authorization');
 // add auth and id  to all routes
 
 router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleController.getAllShuttles);
-router.get('/search', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleController.search);
-router.get('/search2', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleController.search2);
+router.get('/searchByDetails/:eventid/:destinationtown/:destinationzipcode', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleController.searchByDetails);
+router.get('/searchByPartier/:partierid', IdentificationJWT.identification, Authorization.mustBeAdminOrPartier, ShuttleController.searchByPartier);
 
 module.exports = router;
  

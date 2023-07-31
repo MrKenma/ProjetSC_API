@@ -132,6 +132,13 @@ module.exports.deleteOrganization = async (req, res) => {
             return;
         }
 
+        const { rows } = await OrganizationModel.getOrganization(id, client);
+
+        if (rows[0] === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
         await OrganizationModel.deleteOrganization(id, client);
         res.sendStatus(204);
 

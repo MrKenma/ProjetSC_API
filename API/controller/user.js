@@ -163,6 +163,15 @@ module.exports.deleteUser = async (req, res) => {
             return;
         }
 
+        const {rows: users} = await UserModel.getUser(id, client);
+
+        const user = users[0];
+
+        if (user === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
         await UserModel.deleteUser(id, client);
 
         res.sendStatus(204);

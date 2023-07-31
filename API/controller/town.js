@@ -69,6 +69,13 @@ module.exports.deleteTown = async (req, res) => {
             return;
         }
 
+        const {rows: towns} = await TownModel.getTown(name, zipCode, client);
+
+        if (towns === undefined) {
+            res.sendStatus(404);
+            return;
+        }
+
         await TownModel.deleteTown(name, zipCode, client);
 
     } catch (error) {

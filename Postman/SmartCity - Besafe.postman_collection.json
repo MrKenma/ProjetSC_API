@@ -1,0 +1,501 @@
+{
+	"info": {
+		"_postman_id": "793bb3bf-883d-4f27-a534-2c7ea1839b0c",
+		"name": "SmartCity : Besafe",
+		"description": "Notre projet s’oriente vers la qualité de vie  \ndes habitants, et plus particulièrement leur sécurité lorsqu’ils reviennent de  \nsoirée. Le but est d’offrir une solution aux sorteurs qui rentrent d’habitude  \nseuls chez eux. L’application permettrait à des organisateurs d’événements /  \nresponsables d’associations estudiantines d’organiser des départs groupés de  \nparticipants vers une même région et pour une même plage horaire. Le nom de  \nnotre application se nomme « BeSafe ».",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23451257"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Auth Admin",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Partier",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Organization",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"description": "Ce folder regroupe les appels API concernant l'authentification des utilisateurs"
+		},
+		{
+			"name": "GET",
+			"item": [
+				{
+					"name": "getAllUsers",
+					"item": [
+						{
+							"name": "getAllUsers valid",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "getAllUsers valid no token",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getUser",
+					"item": [
+						{
+							"name": "getUser valid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get user admin token\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const user = {\r",
+											"    \"id\": 1,\r",
+											"    \"email\": \"cercleIESN@gmail.com\",\r",
+											"    \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"    \"pseudo\": \"Cercle IESN\",\r",
+											"    \"phonenumber\": \"0498867457\",\r",
+											"    \"hasuploadedprofilepicture\": false,\r",
+											"    \"isadmin\": false\r",
+											"};\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.eql(user);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/user/1",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"user",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getUser if user not exist",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get user admin token\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const user = {\r",
+											"    \"id\": 1,\r",
+											"    \"email\": \"cercleIESN@gmail.com\",\r",
+											"    \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"    \"pseudo\": \"Cercle IESN\",\r",
+											"    \"phonenumber\": \"0498867457\",\r",
+											"    \"hasuploadedprofilepicture\": false,\r",
+											"    \"isadmin\": false\r",
+											"};\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.eql(user);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/user/1",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"user",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getUser if userid is NaN",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get user admin token\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const user = {\r",
+											"    \"id\": 1,\r",
+											"    \"email\": \"cercleIESN@gmail.com\",\r",
+											"    \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"    \"pseudo\": \"Cercle IESN\",\r",
+											"    \"phonenumber\": \"0498867457\",\r",
+											"    \"hasuploadedprofilepicture\": false,\r",
+											"    \"isadmin\": false\r",
+											"};\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.eql(user);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/user/1",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"user",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "PATCH",
+			"item": [
+				{
+					"name": "updatePartier",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userid\" : 9,\r\n    \"addresstown\" : \"Namur\",\r\n    \"addresszipcode\" : \"5000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{BASE_URL}}:{{PORT}}/partier/",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"partier",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE",
+			"item": [
+				{
+					"name": "deleteUser",
+					"item": [
+						{
+							"name": "deleteUser valid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"delete user valid\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/user/9",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"user",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteUser if user not exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"delete user valid\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/user/9",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"user",
+										"9"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "postEvent",
+					"item": [
+						{
+							"name": "postEvent valid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"create event\", function(){\r",
+											"    pm.response.to.have.status(201);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Soirée Postman\",\r\n  \"description\": \"Postman c'est un outil cool\",\r\n  \"nameandnumstreet\": \"rue Godefroid, 20\",\r\n  \"departingpoint\": \"devant la gare\",\r\n  \"startdatetime\": \"2023-07-31 20:00:00\",\r\n  \"enddatetime\": \"2023-08-01 02:00:00\",\r\n  \"organizationid\": 3,\r\n  \"addresstown\": \"Jambes\",\r\n  \"addresszipcode\": \"5100\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/event/",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"event",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "postEvent if name event already exists",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"create event\", function(){\r",
+											"    pm.response.to.have.status(201);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Soirée Postman\",\r\n  \"description\": \"Postman c'est un outil cool\",\r\n  \"nameandnumstreet\": \"rue Godefroid, 20\",\r\n  \"departingpoint\": \"devant la gare\",\r\n  \"startdatetime\": \"2023-07-31 20:00:00\",\r\n  \"enddatetime\": \"2023-08-01 02:00:00\",\r\n  \"organizationid\": 3,\r\n  \"addresstown\": \"Jambes\",\r\n  \"addresszipcode\": \"5100\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/event/",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"event",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "PORT",
+			"value": "3001"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "192.168.1.26"
+		}
+	]
+}
