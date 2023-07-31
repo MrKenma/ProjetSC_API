@@ -4,10 +4,64 @@ const EventModel = require('../model/event');
 const EventORM = require('../ORM/model/event');
 const OrganizationORM = require('../ORM/model/organization');
 const UserORM = require('../ORM/model/user');
-const ShuttleORM = require('../ORM/model/shuttle');
-const ShuttleMemberORM = require('../ORM/model/shuttleMember');
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Event:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              name:
+ *                  type: string
+ *                  description: nom de l'événement
+ *              description:
+ *                  type: string
+ *                  description: description de l'événement
+ *              nameandnumstreet:
+ *                  type: string
+ *                  description: nom et numéro de rue de l'événement
+ *              departingpoint:
+ *                  type: string
+ *                  description: point de départ de l'événement
+ *              startdatetime:
+ *                  type: string
+ *                  description: date et heure de début de l'événement
+ *              enddatetime:
+ *                  type: string
+ *                  description: date et heure de fin de l'événement
+ *              organizationid:
+ *                  type: integer
+ *                  description: id de l'organisateur de l'événement
+ *              addresstown:
+ *                  type: string
+ *                  description: ville de l'événement
+ *              addresszipcode:
+ *                  type: string
+ *                  description: code postal de l'événement
+ *          example:
+ *            id: 1
+ *            name: "Party de la rentrée"
+ *            description: "Party de la rentrée des étudiants"
+ *            nameandnumstreet: "123 rue de la rentrée"
+ *            departingpoint: "devant le pavillon des sciences"
+ *            startdatetime: "2020-09-01 20:00:00"
+ *            enddatetime: "2020-09-02 03:00:00"
+ *            organizationid: 1
+ *            addresstown: "Sherbrooke"
+ *            addresszipcode: "J1E 4K1"
+ */
 
+ 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      AllEventsFound:
+ *          description: Renvoie tous les événements
+ */ 
 
 module.exports.getAllEvents = async (req, res) => {
 
@@ -33,6 +87,18 @@ module.exports.getAllEvents = async (req, res) => {
         client.release();
     }
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventFound:
+ *          description: Renvoie un événement
+ *      EventNotFound:
+ *          description: L'événement n'existe pas
+ *      EventIdNotANumber:
+ *          description: L'id de l'événement n'est pas un nombre
+ */
 
 module.exports.getEvent = async (req, res) => {
     const client = await pool.connect();
@@ -66,6 +132,65 @@ module.exports.getEvent = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventCreated:
+ *          description: L'événement a été créé
+ *      EventNameAlreadyExists:
+ *          description: Le nom de l'événement existe déjà
+ *      CreateEventBadRequest:
+ *          description: Mauvaise requête
+ *  requestBodies:
+ *      CreateEvent:
+ *          description: L'événement à créer
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *                          name:
+ *                              type: string
+ *                              description: nom de l'événement
+ *                          description:
+ *                              type: string
+ *                              description: description de l'événement
+ *                          nameandnumstreet:
+ *                              type: string
+ *                              description: nom et numéro de rue de l'événement
+ *                          departingpoint:
+ *                              type: string
+ *                              description: point de départ de l'événement
+ *                          startdatetime:
+ *                              type: string
+ *                              description: date et heure de début de l'événement
+ *                          enddatetime:
+ *                              type: string
+ *                              description: date et heure de fin de l'événement
+ *                          organizationid:
+ *                              type: integer
+ *                              description: id de l'organisateur de l'événement
+ *                          addresstown:
+ *                              type: string
+ *                              description: ville de l'événement
+ *                          addresszipcode:
+ *                              type: string
+ *                              description: code postal de l'événement
+ *                      required:
+ *                          - name
+ *                          - description
+ *                          - nameandnumstreet
+ *                          - departingpoint
+ *                          - startdatetime
+ *                          - enddatetime
+ *                          - organizationid
+ *                          - addresstown
+ *                          - addresszipcode
+ */
+
 module.exports.postEvent = async (req, res) => {
     const client = await pool.connect();
     
@@ -96,6 +221,57 @@ module.exports.postEvent = async (req, res) => {
         client.release();
     }
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventUpdated:
+ *          description: L'événement a été mis à jour
+ *      EventNotFound:
+ *          description: L'événement n'existe pas
+ *      EventIdNotANumber:
+ *          description: L'id de l'événement n'est pas un nombre
+ * requestBodies:
+ *      UpdateEvent:
+ *          description: L'événement à mettre à jour
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *                          name:
+ *                              type: string
+ *                              description: nom de l'événement
+ *                          description:
+ *                              type: string
+ *                              description: description de l'événement
+ *                          nameandnumstreet:
+ *                              type: string
+ *                              description: nom et numéro de rue de l'événement
+ *                          departingpoint:
+ *                              type: string
+ *                              description: point de départ de l'événement
+ *                          startdatetime:
+ *                              type: string
+ *                              description: date et heure de début de l'événement
+ *                          enddatetime:
+ *                              type: string
+ *                              description: date et heure de fin de l'événement
+ *                          organizationid:
+ *                              type: integer
+ *                              description: id de l'organisateur de l'événement
+ *                          addresstown:
+ *                              type: string
+ *                              description: ville de l'événement
+ *                          addresszipcode:
+ *                              type: string
+ *                              description: code postal de l'événement    
+ *                      required:
+ *                          - id
+ */
 
 module.exports.updateEvent = async (req, res) => {
     const client = await pool.connect();
@@ -144,6 +320,18 @@ module.exports.updateEvent = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventDeleted:
+ *          description: L'événement a été supprimé
+ *      EventNotFound:
+ *          description: L'événement n'existe pas
+ *      EventIdNotANumber:
+ *          description: L'id de l'événement n'est pas un nombre
+ */
+
 module.exports.deleteEvent = async (req, res) => {
     const client = await pool.connect();
     const id = parseInt(req.params.id);
@@ -178,6 +366,16 @@ module.exports.deleteEvent = async (req, res) => {
 
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      NameExists:
+ *          description: Le nom existe déjà
+ *      NameMissing:
+ *          description: Le nom est manquant
+ */
+
 module.exports.nameExists = async (req, res) => {
     const client = await pool.connect();
     const name = decodeURIComponent(req.params.name);
@@ -201,6 +399,18 @@ module.exports.nameExists = async (req, res) => {
     }
 
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventsFound:
+ *          description: Les événements ont été trouvés
+ *      EventsNotFound:
+ *          description: Les événements n'ont pas été trouvés
+ *      OrganizationIdNotANumber:
+ *          description: L'id de l'organisation n'est pas un nombre
+ */
         
 module.exports.getEventsByOrganization = async (req, res) => {
     const client = await pool.connect();
@@ -231,6 +441,18 @@ module.exports.getEventsByOrganization = async (req, res) => {
         client.release();
     }
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      EventsFound:
+ *          description: Les événements ont été trouvés
+ *      EventsNotFound:
+ *          description: Les événements n'ont pas été trouvés
+ *      IdNotANumber:
+ *          description: L'id n'est pas un nombre
+ */
 
 module.exports.search = async (req, res) => {
     const id = parseInt(req.params.id);

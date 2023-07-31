@@ -4,6 +4,37 @@ const ImageModel = require('../model/image');
 
 /***************** CRUD for organization *****************/
 
+/** 
+ * @swagger
+ *  components:
+ *      schemas:
+ *          Organization:
+ *              type: object
+ *              properties:
+ *                  userID:
+ *                      type: integer
+ *                      description: l'id de l'utilisateur
+ *                  responsibleName:
+ *                      type: string
+ *                      description: le nom du responsable de l'organisation
+ *                  isVerified:
+ *                      type: boolean
+ *                      description: si l'organisation est vérifiée ou non
+ *                  example:
+ *                      userID: 1
+ *                      responsibleName: "Jean"
+ *                      isVerified: true
+*/
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      AllOrganizationsFound:
+ *          description: Récupère toutes les organisations
+ */
+
+
 module.exports.getAllOrganizations = async (req, res) => {
     const client = await pool.connect();
 
@@ -29,6 +60,18 @@ module.exports.getAllOrganizations = async (req, res) => {
         
     }
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      OrganizationFound:
+ *          description: Récupère une organisation
+ *      OrganizationNotFound:
+ *          description: L'organisation n'a pas été trouvée
+ *      OrganizationIdNotANumber:
+ *          description: L'id de l'organisation n'est pas un nombre
+ */
 
 module.exports.getOrganization = async (req, res) => {
     const client = await pool.connect();
@@ -61,6 +104,37 @@ module.exports.getOrganization = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      OrganizationCreated:
+ *          description: L'organisation a été créée
+ *      CreateOrganizationBadRequest:
+ *          description: Mauvaise requête
+ *  requestBodies:
+ *      CreateOrganization:
+ *          description: L'organisation à créer
+ *          content:
+ *              application/json:
+ *                  type: object
+ *                  schema:
+ *                      properties:
+ *                          userID:
+ *                              type: integer
+ *                              description: l'id de l'utilisateur
+ *                          responsibleName:
+ *                              type: string
+ *                              description: le nom du responsable de l'organisation
+ *                          isVerified:
+ *                              type: boolean
+ *                              description: si l'organisation est vérifiée ou non
+ *                          required:
+ *                              - userID
+ *                              - responsibleName 
+ *                              - isVerified   
+ */
+
 module.exports.postOrganization = async (req, res) => {
     const client = await pool.connect();
     const {userID, responsibleName, isVerified } = req.body;
@@ -82,6 +156,37 @@ module.exports.postOrganization = async (req, res) => {
         client.release();
     }
 }
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      OrganizationUpdated:
+ *          description: L'organisation a été mise à jour
+ *      OrganizationNotFound:
+ *          description: L'organisation n'a pas été trouvée
+ *      OrganizationIdNotANumber:
+ *          description: L'id de l'organisation n'est pas un nombre
+ *  requestBodies:
+ *      UpdateOrganization:
+ *          description: L'organisation à mettre à jour
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          userID:
+ *                              type: integer
+ *                              description: l'id de l'utilisateur
+ *                          responsibleName:
+ *                              type: string
+ *                              description: le nom du responsable de l'organisation
+ *                          isVerified:
+ *                              type: boolean
+ *                              description: si l'organisation est vérifiée ou non
+ *                          required:
+ *                              -userID
+ */
 
 module.exports.updateOrganization = async (req, res) => {
     const client = await pool.connect();
@@ -120,6 +225,19 @@ module.exports.updateOrganization = async (req, res) => {
         client.release();
     }
 }
+
+
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      OrganizationDeleted:
+ *          description: L'organisation a été supprimée
+ *      OrganizationNotFound:
+ *          description: L'organisation n'a pas été trouvée
+ *      OrganizationIdNotANumber:
+ *          description: L'id de l'organisation n'est pas un nombre
+ */
 
 module.exports.deleteOrganization = async (req, res) => {
     const client = await pool.connect();

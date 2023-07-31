@@ -4,6 +4,8 @@ const PartierModel = require('../model/partier');
 
 /***************** CRUD for partier *****************/
 
+
+
 module.exports.getAllPartiers = async (req, res) => {
     const client = await pool.connect();
     

@@ -4,6 +4,44 @@ const jwt = require('jsonwebtoken');
 
 // le secret token est "secret"
 
+/**
+ * @swagger
+ *
+ * components:
+ *   responses:
+ *     UnauthorizedJWT:
+ *       description: JWT manquant ou expiré
+ *       content:
+ *         application/json:
+ *           schema:
+ *             oneOf:
+ *             $ref: '#/components/schemas/WrongJWT'
+ *
+ *   schemas:
+ *     WrongJWT:
+ *       type: object
+ *       oneOf:
+ *         - $ref: '#/components/responses/MissingJWT'
+ *         - $ref: '#/components/responses/ExpiredJWT'
+ */
+
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ *  responses:
+ *      ErrorJWT:
+ *          description: Le JWT n'est pas valide
+ *      MissingJWT:
+ *          description: Le JWT n'est pas présent
+ *      ExpiredJWT:
+ *        description: Le JWT est expiré
+ */
+
 module.exports.identification = async (req, res, next) => {
 
     const headerAuth = req.get('authorization');
@@ -24,8 +62,7 @@ module.exports.identification = async (req, res, next) => {
         next();
 
     } catch (error) {
-        console.error(error.message);
-        res.status(401).json(error.message);
+        res.status(400).json(error.message);
     }
 
 }

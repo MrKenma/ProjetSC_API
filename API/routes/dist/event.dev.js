@@ -1,11 +1,14 @@
-const EventController = require('../controller/event');
-const Router = require('express-promise-router');
-const router = new Router;
+"use strict";
 
-const Authorization = require('../middleware/Authorization');
-const IdentificationJWT = require('../middleware/IdentificationJWT');
+var EventController = require('../controller/event');
 
+var Router = require('express-promise-router');
 
+var router = new Router();
+
+var Authorization = require('../middleware/Authorization');
+
+var IdentificationJWT = require('../middleware/IdentificationJWT');
 /**
  * @swagger
  * /event/:
@@ -26,8 +29,8 @@ const IdentificationJWT = require('../middleware/IdentificationJWT');
  *              description: Erreur serveur
  */
 
-router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier, EventController.getAllEvents);
 
+router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier, EventController.getAllEvents);
 /**
  * @swagger
  * /event/search/{id}:
@@ -55,9 +58,7 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrg
  *              description: Erreur serveur
  */
 
-router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier , EventController.search);
-
-
+router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier, EventController.search);
 /**
  * @swagger
  * /event/organization/{id}:
@@ -90,7 +91,6 @@ router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBe
  */
 
 router.get('/organization/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEventsByOrganization);
-
 /**
  * @swagger
  *  /event/{id}:
@@ -119,7 +119,6 @@ router.get('/organization/:id', IdentificationJWT.identification, Authorization.
  */
 
 router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEvent);
-
 /**
  * @swagger
  *  /event/nameExists/{name}:
@@ -147,10 +146,9 @@ router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdminOr
  *                      $ref: '#/components/responses/UnauthorizedJWT'
  *                  500:
  *                      description: Erreur serveur
- */ 
- 
-router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.nameExists);
+ */
 
+router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.nameExists);
 /**
  * @swagger
  *  /event/:
@@ -181,7 +179,6 @@ router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.
  */
 
 router.post('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.postEvent);
-
 /**
  * @swagger
  *  /event/:
@@ -209,9 +206,9 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOr
  *                      $ref: '#/components/responses/EventNotFound'
  *                  500:
  *                      description: Erreur serveur
- */ 
-router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.updateEvent);
+ */
 
+router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.updateEvent);
 /**
  * @swagger
  *  /event/{id}:
@@ -243,6 +240,5 @@ router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, E
  *                      description: Erreur serveur
  */
 
-router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.deleteEvent);
-
+router["delete"]('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.deleteEvent);
 module.exports = router;
