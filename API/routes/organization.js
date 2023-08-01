@@ -21,7 +21,7 @@ const Authorization = require('../middleware/Authorization');
  *          403:
  *              $ref: '#/components/responses/mustBeAdmin'
  *          404:
- *              $ref: '#/components/responses/OrganizationsNotFound'
+ *              $ref: '#/components/responses/OrganizationNotFound'
  *          500:
  *              description: Erreur serveur
  */
@@ -36,23 +36,23 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Org
  *              - Organization
  *          security:
  *              - bearerAuth: []
- *          description: Créer un événement
+ *          description: Créer une organisation
  *          requestBody:
  *              content:
- *              application/json:
- *              schema:
- *                  $ref: '#/components/schemas/CreateOrganization'
- *              responses:
- *                  201:
- *                      $ref: '#/components/responses/OrganizationCreated'
- *                  403:
- *                      $ref: '#/components/responses/mustBeAdmin'
- *                  400:
- *                      $ref: '#/components/responses/CreateOrganizationBadRequest'
- *                  401:
- *                      $ref: '#/components/responses/UnauthorizedJWT'
- *                  500:
- *                      description: Erreur serveur
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/CreateOrganization'
+ *          responses:
+ *              201:
+ *                  $ref: '#/components/responses/OrganizationCreated'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
+ *              400:
+ *                  $ref: '#/components/responses/CreateOrganizationBadRequest'
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              500:
+ *                  description: Erreur serveur
  */
 
 router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.postOrganization);
@@ -69,21 +69,21 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Or
  *          requestBody:
  *              content:
  *                  application/json:
- *              schema:
- *                  $ref: '#/components/schemas/UpdateOrganization'
- *              responses:
- *                  200:
- *                      $ref: '#/components/responses/OrganizationUpdated'
- *                  403:
- *                      $ref: '#/components/responses/mustBeAdmin'
- *                  400:
- *                      $ref: '#/components/responses/OrganizationIdNotANumber'
- *                  401:
- *                      $ref: '#/components/responses/UnauthorizedJWT'
- *                  404:
- *                      $ref: '#/components/responses/OrganizationNotFound'
- *                  500:
- *                      description: Erreur serveur
+ *                      schema:
+ *                          $ref: '#/components/schemas/UpdateOrganization'
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OrganizationUpdated'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
+ *              400:
+ *                  $ref: '#/components/responses/OrganizationIdNotANumber'
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              404:
+ *                  $ref: '#/components/responses/OrganizationNotFound'
+ *              500:
+ *                  description: Erreur serveur
  */ 
 
 router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.updateOrganization);
@@ -99,24 +99,24 @@ router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, O
  *          description: Supprime un événement
  *          parameters:
  *              - name: id
- *              description: id de l'événement
- *              in: path
- *              required: true
- *              schema:
- *                  type: integer
- *              responses:
- *                  204:
- *                      $ref: '#/components/responses/OrganizationDeleted'
- *                  403:
- *                      $ref: '#/components/responses/mustBeAdmin'
- *                  400:
- *                      $ref: '#/components/responses/OrganizationIdNotANumber'
- *                  401:
- *                      $ref: '#/components/responses/UnauthorizedJWT'
- *                  404:
- *                      $ref: '#/components/responses/OrganizationNotFound'
- *                  500:
- *                      description: Erreur serveur
+ *                description: id de l'événement
+ *                in: path
+ *                required: true
+ *                schema:
+ *                   type: integer
+ *          responses:
+ *              204:
+ *                  $ref: '#/components/responses/OrganizationDeleted'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
+ *              400:
+ *                  $ref: '#/components/responses/OrganizationIdNotANumber'
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              404:
+ *                  $ref: '#/components/responses/OrganizationNotFound'
+ *              500:
+ *                  description: Erreur serveur
  */
 
 router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.deleteOrganization);

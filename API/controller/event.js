@@ -89,7 +89,7 @@ module.exports.getAllEvents = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventFound:
@@ -133,7 +133,7 @@ module.exports.getEvent = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventCreated:
@@ -148,47 +148,7 @@ module.exports.getEvent = async (req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          id:
- *                              type: integer
- *                          name:
- *                              type: string
- *                              description: nom de l'événement
- *                          description:
- *                              type: string
- *                              description: description de l'événement
- *                          nameandnumstreet:
- *                              type: string
- *                              description: nom et numéro de rue de l'événement
- *                          departingpoint:
- *                              type: string
- *                              description: point de départ de l'événement
- *                          startdatetime:
- *                              type: string
- *                              description: date et heure de début de l'événement
- *                          enddatetime:
- *                              type: string
- *                              description: date et heure de fin de l'événement
- *                          organizationid:
- *                              type: integer
- *                              description: id de l'organisateur de l'événement
- *                          addresstown:
- *                              type: string
- *                              description: ville de l'événement
- *                          addresszipcode:
- *                              type: string
- *                              description: code postal de l'événement
- *                      required:
- *                          - name
- *                          - description
- *                          - nameandnumstreet
- *                          - departingpoint
- *                          - startdatetime
- *                          - enddatetime
- *                          - organizationid
- *                          - addresstown
- *                          - addresszipcode
+ *                      $ref: '#/components/schemas/Event'
  */
 
 module.exports.postEvent = async (req, res) => {
@@ -223,7 +183,7 @@ module.exports.postEvent = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventUpdated:
@@ -321,7 +281,7 @@ module.exports.updateEvent = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventDeleted:
@@ -367,7 +327,7 @@ module.exports.deleteEvent = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      NameExists:
@@ -401,7 +361,7 @@ module.exports.nameExists = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventsFound:
@@ -443,7 +403,7 @@ module.exports.getEventsByOrganization = async (req, res) => {
 }
 
 /**
- * @swagger
+ * 
  * components:
  *  responses:
  *      EventsFound:

@@ -6,7 +6,7 @@ const options = {
         openapi: '3.0.0',
         info: {
             title: 'Besafe API', // Title (required)
-            version: '1.0.0', // Version (required)
+            version: '1.0', // Version (required)
         },
     },
     // Path to the API docs
@@ -14,10 +14,10 @@ const options = {
         './controller/*',
         './middleware/*',
         './model/*',
-        './route/*',
+        './routes/*',
     ],
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
 const swaggerSpec = swaggerJSDoc(options);
-fs.writeFileSync('./swagger/spec.json', JSON.stringify(swaggerSpec));
+fs.writeFileSync('./swagger/specs.json', JSON.stringify(swaggerSpec));

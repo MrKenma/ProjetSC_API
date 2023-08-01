@@ -20,11 +20,12 @@ const ImageModel = require('../model/image');
  *                  isVerified:
  *                      type: boolean
  *                      description: si l'organisation est vérifiée ou non
- *                  example:
- *                      userID: 1
- *                      responsibleName: "Jean"
- *                      isVerified: true
-*/
+ *              example:
+ *                  userID: 1
+ *                  responsibleName: "Jean"
+ *                  isVerified: true
+ */
+
 
 /**
  * @swagger
@@ -110,29 +111,13 @@ module.exports.getOrganization = async (req, res) => {
  *  responses:
  *      OrganizationCreated:
  *          description: L'organisation a été créée
- *      CreateOrganizationBadRequest:
- *          description: Mauvaise requête
  *  requestBodies:
  *      CreateOrganization:
  *          description: L'organisation à créer
  *          content:
  *              application/json:
- *                  type: object
  *                  schema:
- *                      properties:
- *                          userID:
- *                              type: integer
- *                              description: l'id de l'utilisateur
- *                          responsibleName:
- *                              type: string
- *                              description: le nom du responsable de l'organisation
- *                          isVerified:
- *                              type: boolean
- *                              description: si l'organisation est vérifiée ou non
- *                          required:
- *                              - userID
- *                              - responsibleName 
- *                              - isVerified   
+ *                     $ref: '#/components/schemas/Organization'
  */
 
 module.exports.postOrganization = async (req, res) => {
@@ -173,19 +158,7 @@ module.exports.postOrganization = async (req, res) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          userID:
- *                              type: integer
- *                              description: l'id de l'utilisateur
- *                          responsibleName:
- *                              type: string
- *                              description: le nom du responsable de l'organisation
- *                          isVerified:
- *                              type: boolean
- *                              description: si l'organisation est vérifiée ou non
- *                          required:
- *                              -userID
+ *                      $ref: '#/components/schemas/Organization'
  */
 
 module.exports.updateOrganization = async (req, res) => {

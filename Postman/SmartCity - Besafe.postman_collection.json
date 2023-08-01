@@ -12,9 +12,44 @@
 			"item": [
 				{
 					"name": "Auth Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"pm.environment.set('token', res.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/user/login?email=admin@gmail.com&password=Password123;",
+							"protocol": "http",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{VERSION}}",
+								"user",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "admin@gmail.com"
+								},
+								{
+									"key": "password",
+									"value": "Password123;"
+								}
+							]
+						}
 					},
 					"response": []
 				},
@@ -45,6 +80,145 @@
 					"item": [
 						{
 							"name": "getAllUsers valid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Get all users with a valid admin token\", function(){\r",
+											"    pm.response.to.have.status(200);\r",
+											"    const expectedUsersData = [\r",
+											"        {\r",
+											"            \"id\": 1,\r",
+											"            \"email\": \"cercleIESN@gmail.com\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Cercle IESN\",\r",
+											"            \"phonenumber\": \"0498867457\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 2,\r",
+											"            \"email\": \"cercleEco@gmail.com\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Cercle Eco\",\r",
+											"            \"phonenumber\": \"0478965467\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 3,\r",
+											"            \"email\": \"cercleChigé@gmail.com\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Cercle Chigé\",\r",
+											"            \"phonenumber\": \"086754654\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 4,\r",
+											"            \"email\": \"etu44721@henallux.be\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Wan\",\r",
+											"            \"phonenumber\": \"0499517092\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 5,\r",
+											"            \"email\": \"etu44108@henallux.be\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Sim\",\r",
+											"            \"phonenumber\": \"0499172696\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 6,\r",
+											"            \"email\": \"etu47233@henallux.be\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"MrKenma\",\r",
+											"            \"phonenumber\": \"0499579465\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 7,\r",
+											"            \"email\": \"fhmqez@gmail.com\",\r",
+											"            \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"            \"pseudo\": \"Pseudo\",\r",
+											"            \"phonenumber\": \"0499270747\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": true,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 8,\r",
+											"            \"email\": \"admin@gmail.com\",\r",
+											"            \"password\": \"$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG\",\r",
+											"            \"pseudo\": \"Admin\",\r",
+											"            \"phonenumber\": \"0498262596\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": true,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 9,\r",
+											"            \"email\": \"partier@gmail.com\",\r",
+											"            \"password\": \"$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG\",\r",
+											"            \"pseudo\": \"Partier\",\r",
+											"            \"phonenumber\": \"0498262596\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"        {\r",
+											"            \"id\": 10,\r",
+											"            \"email\": \"organization@gmail.com\",\r",
+											"            \"password\": \"$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG\",\r",
+											"            \"pseudo\": \"Organization\",\r",
+											"            \"phonenumber\": \"0498262586\",\r",
+											"            \"hasuploadedprofilepicture\": false,\r",
+											"            \"isadmin\": false,\r",
+											"        },\r",
+											"    ];\r",
+											"\r",
+											"    const response = pm.response.json();\r",
+											"    pm.expect(response).to.be.eql(expectedUsersData);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/user/",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"{{VERSION}}",
+										"user",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAllUsers valid no token",
 							"request": {
 								"method": "GET",
 								"header": []
@@ -52,7 +226,7 @@
 							"response": []
 						},
 						{
-							"name": "getAllUsers valid no token",
+							"name": "getAllUsers valid wrong token",
 							"request": {
 								"method": "GET",
 								"header": []
@@ -438,8 +612,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"create event\", function(){\r",
-											"    pm.response.to.have.status(201);\r",
+											"pm.test(\"Create an event with a valid organization token if event name already exists\", function(){\r",
+											"    pm.response.to.have.status(409);\r",
 											"})"
 										],
 										"type": "text/javascript"
@@ -461,7 +635,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Soirée Postman\",\r\n  \"description\": \"Postman c'est un outil cool\",\r\n  \"nameandnumstreet\": \"rue Godefroid, 20\",\r\n  \"departingpoint\": \"devant la gare\",\r\n  \"startdatetime\": \"2023-07-31 20:00:00\",\r\n  \"enddatetime\": \"2023-08-01 02:00:00\",\r\n  \"organizationid\": 3,\r\n  \"addresstown\": \"Jambes\",\r\n  \"addresszipcode\": \"5100\"\r\n}",
+									"raw": "{\r\n  \"name\": \"Bunker med\",\r\n  \"description\": \"Postman c'est un outil cool\",\r\n  \"nameandnumstreet\": \"rue Godefroid, 20\",\r\n  \"departingpoint\": \"devant la gare\",\r\n  \"startdatetime\": \"2023-07-31 20:00:00\",\r\n  \"enddatetime\": \"2023-08-01 02:00:00\",\r\n  \"organizationid\": 3,\r\n  \"addresstown\": \"Jambes\",\r\n  \"addresszipcode\": \"5100\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -469,13 +643,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://{{BASE_URL}}:{{PORT}}/event/",
+									"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/event/",
 									"protocol": "http",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"port": "{{PORT}}",
 									"path": [
+										"{{VERSION}}",
 										"event",
 										""
 									]

@@ -7,7 +7,7 @@ const IdentificationJWT = require('../middleware/IdentificationJWT');
 
 
 /**
- * @swagger
+ * 
  * /event/:
  *  get:
  *      tags:
@@ -29,7 +29,7 @@ const IdentificationJWT = require('../middleware/IdentificationJWT');
 router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier, EventController.getAllEvents);
 
 /**
- * @swagger
+ * 
  * /event/search/{id}:
  *  get:
  *      tags:
@@ -59,7 +59,7 @@ router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBe
 
 
 /**
- * @swagger
+ * 
  * /event/organization/{id}:
  *  get:
  *      tags:
@@ -92,7 +92,7 @@ router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBe
 router.get('/organization/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEventsByOrganization);
 
 /**
- * @swagger
+ * 
  *  /event/{id}:
  *  get:
  *      tags:
@@ -121,7 +121,7 @@ router.get('/organization/:id', IdentificationJWT.identification, Authorization.
 router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEvent);
 
 /**
- * @swagger
+ * 
  *  /event/nameExists/{name}:
  *      get:
  *          tags:
@@ -152,7 +152,7 @@ router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdminOr
 router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.nameExists);
 
 /**
- * @swagger
+ * 
  *  /event/:
  *      post:
  *          tags:
@@ -183,7 +183,7 @@ router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.
 router.post('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.postEvent);
 
 /**
- * @swagger
+ * 
  *  /event/:
  *      patch:
  *          tags:
@@ -213,7 +213,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOr
 router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.updateEvent);
 
 /**
- * @swagger
+ * 
  *  /event/{id}:
  *      delete:
  *          tags:
