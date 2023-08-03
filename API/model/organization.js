@@ -18,3 +18,17 @@ module.exports.deleteOrganization = async (id, client) => {
     return await client.query(`DELETE FROM organization WHERE id = $1`, [id]);
 }
 
+/*
+module.exports.getOrganizationByEmail = async (email, client) => {
+    return await client.query(`SELECT * FROM organization WHERE email = $1`, [email]);
+}
+
+module.exports.getOrganizationByName = async (name, client) => {
+    return await client.query(`SELECT * FROM organization WHERE name = $1`, [name]);
+}
+
+module.exports.emailExist = async (email, client) => {
+    const { rows } = await client.query(`SELECT count(*) as nbr FROM organization WHERE email = $1`, [email]);
+    return rows[0].nbr > 0;
+}
+*/

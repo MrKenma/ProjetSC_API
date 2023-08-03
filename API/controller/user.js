@@ -311,6 +311,10 @@ module.exports.register = async (req, res) => {
         console.error(error);
         res.sendStatus(500);
 
+    } finally {
+
+        client.release();
+
     }
 }
 
@@ -337,7 +341,7 @@ module.exports.login = async (req, res) => {
             return;
         }
 
-        if (! await compareHash(password, user.password)) {
+        if (!await compareHash(password, user.password)) {
             res.status(401).send('Wrong password');
             return;
         }

@@ -31,6 +31,39 @@ const Authorization = require('../middleware/Authorization');
 router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.getAllOrganizations);
 
 /**
+ * @Swagger
+ *  /organization/{id}:
+ *      get:
+ *          tags:
+ *              - Organization
+*           security:
+ *              - bearerAuth []
+*           description: Récupérer un organization par son id
+ *          parameters:
+ *              - name: id
+ *                  in: path
+ *                  description: id de l'organization
+ *                  required: true
+ *                  schema:
+ *                      type: integer
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OrganizationFound'
+ *              400:
+ *                  $ref: '#/components/responses/OrganizationIdNotANumber'
+ *              401:
+ *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
+ *              404:
+ *                  $ref '#/components/responses/OrganizationNotFound'
+ *              500:
+ *                  description: Erreur serveur
+ */
+
+router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.getOrganization);
+
+/**
  * @swagger
  *  /organization/:
  *      post:
