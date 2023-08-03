@@ -18,6 +18,8 @@ const Authorization = require('../middleware/Authorization');
  *      responses:
  *          200:
  *              $ref: '#/components/responses/AllOrganizationsFound'
+ *          401:
+ *              $ref: '#/components/responses/UnauthorizedJWT'
  *          403:
  *              $ref: '#/components/responses/mustBeAdmin'
  *          404:
@@ -45,12 +47,12 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Org
  *          responses:
  *              201:
  *                  $ref: '#/components/responses/OrganizationCreated'
- *              403:
- *                  $ref: '#/components/responses/mustBeAdmin'
  *              400:
  *                  $ref: '#/components/responses/CreateOrganizationBadRequest'
  *              401:
  *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
  *              500:
  *                  description: Erreur serveur
  */
@@ -65,7 +67,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Or
  *              - Organization
  *          security:
  *              - bearerAuth: []
- *          description: Met à jour un événement
+ *          description: Met à jour une organisation
  *          requestBody:
  *              content:
  *                  application/json:
@@ -74,17 +76,17 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Or
  *          responses:
  *              200:
  *                  $ref: '#/components/responses/OrganizationUpdated'
- *              403:
- *                  $ref: '#/components/responses/mustBeAdmin'
  *              400:
  *                  $ref: '#/components/responses/OrganizationIdNotANumber'
  *              401:
  *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
  *              404:
  *                  $ref: '#/components/responses/OrganizationNotFound'
  *              500:
  *                  description: Erreur serveur
- */ 
+ */
 
 router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, OrganizationController.updateOrganization);
 
@@ -96,10 +98,10 @@ router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, O
  *              - Organization
  *          security:
  *              - bearerAuth: []
- *          description: Supprime un événement
+ *          description: Supprime une organisation
  *          parameters:
  *              - name: id
- *                description: id de l'événement
+ *                description: id de l'organisation
  *                in: path
  *                required: true
  *                schema:
@@ -107,12 +109,12 @@ router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, O
  *          responses:
  *              204:
  *                  $ref: '#/components/responses/OrganizationDeleted'
- *              403:
- *                  $ref: '#/components/responses/mustBeAdmin'
  *              400:
  *                  $ref: '#/components/responses/OrganizationIdNotANumber'
  *              401:
  *                  $ref: '#/components/responses/UnauthorizedJWT'
+ *              403:
+ *                  $ref: '#/components/responses/mustBeAdmin'
  *              404:
  *                  $ref: '#/components/responses/OrganizationNotFound'
  *              500:
