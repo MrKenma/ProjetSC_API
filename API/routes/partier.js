@@ -39,7 +39,7 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Par
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/CreatePartier'
+ *                          $ref: '#/components/schemas/Partier'
  *          responses:
  *              201:
  *                  $ref: '#/components/responses/PartierCreated'
@@ -67,7 +67,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Pa
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/UpdatePartier'
+ *                          $ref: '#/components/schemas/Partier'
  *          responses:
  *              200:
  *                  $ref: '#/components/responses/PartierUpdated'

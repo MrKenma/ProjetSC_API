@@ -26,6 +26,7 @@
     "uuid-by-string": "^4.0.0"
   },
   "devDependencies": {
+    "eslint": "^8.46.0",
     "nodemon": "^2.0.21",
     "swagger-jsdoc": "^6.2.8"
   },

@@ -111,6 +111,8 @@ module.exports.getOrganization = async (req, res) => {
  *  responses:
  *      OrganizationCreated:
  *          description: L'organisation a été créée
+ *      CreateOrganizationBadRequest:
+ *          description: création impossible car l'un des paramètres n'est pas validee
  *  requestBodies:
  *      CreateOrganization:
  *          description: L'organisation à créer
@@ -153,7 +155,7 @@ module.exports.postOrganization = async (req, res) => {
  *      OrganizationIdNotANumber:
  *          description: L'id de l'organisation n'est pas un nombre
  *  requestBodies:
- *      UpdateOrganization:
+ *      OrganizationUpdated:
  *          description: L'organisation à mettre à jour
  *          content:
  *              application/json:

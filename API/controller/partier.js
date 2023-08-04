@@ -1,11 +1,48 @@
 const pool = require('../model/database');
 const PartierModel = require('../model/partier');
 
-
 /***************** CRUD for partier *****************/
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Partier:
+ *       type: object
+ *       properties:
+ *         userID:
+ *           type: integer
+ *           description: L'ID de l'utilisateur du Partier
+ *         firstName:
+ *           type: string
+ *           description: Le prénom du Partier
+ *         lastName:
+ *           type: string
+ *           description: Le nom de famille du Partier
+ *         referencePhoneNumber:
+ *           type: string
+ *           description: Le numéro de téléphone de référence du Partier
+ *         addressTown:
+ *           type: string
+ *           description: La ville de résidence du Partier
+ *         addressZipCode:
+ *           type: integer
+ *           description: Le code postal de la résidence du Partier
+ *       example:
+ *         userID: 1
+ *         firstName: "Jean"
+ *         lastName: "Dupont"
+ *         referencePhoneNumber: "0123456789"
+ *         addressTown: "Paris"
+ *         addressZipCode: 75001
+ */
 
-
-
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      AllPartiersFound:
+ *          description: Récupère toutes les partiers
+ */
 module.exports.getAllPartiers = async (req, res) => {
     const client = await pool.connect();
     
@@ -26,6 +63,19 @@ module.exports.getAllPartiers = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      PartierFound:
+ *          description: Récupère un partier
+ *      PartierNotFound:
+ *          description: Le partier n'a pas été trouvé
+ *      PartierIdNotANumber:
+ *          description: L'id de l'organisation n'est pas un nombre
+ *      CreatePartierBadRequest:
+ *          description: Informations invalides pour créer un partier
+ */
 module.exports.getPartier = async (req, res) => {
     const client = await pool.connect();
     const id = req.params.id;
@@ -58,6 +108,22 @@ module.exports.getPartier = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      PartierCreated:
+ *          description: Le partier a été créé
+ *      CreatePartierBadRequest:
+ *          description: création impossible car l'un des paramètres n'est pas valable
+ *  requestBodies:
+ *      CreatePartier:
+ *          description: Le partier à créer
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                     $ref: '#/components/schemas/Organization'
+ */
 module.exports.postPartier = async (req, res) => {
     const client = await pool.connect();
     const { userID, firstName, lastName, referencePhoneNumber, addressTown, addressZipCode } = req.body;
@@ -81,6 +147,24 @@ module.exports.postPartier = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      PartierUpdated:
+ *          description: L'organisation a été mise à jour
+ *      PartierNotFound:
+ *          description: L'organisation n'a pas été trouvée
+ *      PartierIdNotANumber:
+ *          description: L'id du partier n'est pas un nombre
+ *  requestBodies:
+ *      PartierUpdated:
+ *          description: Le partier à mettre à jour
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Partier'
+ */
 module.exports.updatePartier = async (req, res) => {
     const client = await pool.connect();
     const userid  = parseInt(req.body.userid);
@@ -122,6 +206,17 @@ module.exports.updatePartier = async (req, res) => {
     }
 }
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      PartierDeleted:
+ *          description: Le partier a été supprimé
+ *      PartierNotFound:
+ *          description: Le partier n'a pas été trouvé
+ *      PartierIdNotANumber:
+ *          description: L'id du partier n'est pas un nombre
+ */
 module.exports.deletePartier = async (req, res) => {
 
     const client = await pool.connect();

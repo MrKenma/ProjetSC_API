@@ -12,7 +12,7 @@ module.exports.job = new CronJob('0 * * * * *', async function() {
     const client = await pool.connect();
     
     try {
-
+  
         const now = new Date();
 
         const data = await ShuttleORM.findAll({

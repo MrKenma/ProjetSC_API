@@ -76,7 +76,7 @@ router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, 
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/CreateOrganization'
+ *                          $ref: '#/components/schemas/Organization'
  *          responses:
  *              201:
  *                  $ref: '#/components/responses/OrganizationCreated'
@@ -105,7 +105,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Or
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/UpdateOrganization'
+ *                          $ref: '#/components/schemas/Organization'
  *          responses:
  *              200:
  *                  $ref: '#/components/responses/OrganizationUpdated'
