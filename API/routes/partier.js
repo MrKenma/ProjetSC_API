@@ -13,7 +13,7 @@ const Authorization = require('../middleware/Authorization');
  *          - Partier
  *      security:
  *          - bearerAuth: []
- *      description: Récupère toutes les partiers
+ *      description: Rï¿½cupï¿½re toutes les partiers
  *      responses:
  *          200:
  *              $ref: '#/components/responses/AllPartiersFound'
@@ -34,7 +34,7 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Par
  *              - Partier
  *          security:
  *              - bearerAuth: []
- *          description: Créer un partier
+ *          description: Crï¿½er un partier
  *          requestBody:
  *              content:
  *                  application/json:
@@ -62,7 +62,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Pa
  *              - Partier
  *          security:
  *              - bearerAuth: []
- *          description: Met à jour un partier
+ *          description: Met ï¿½ jour un partier
  *          requestBody:
  *              content:
  *                  application/json:
@@ -72,7 +72,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Pa
  *              200:
  *                  $ref: '#/components/responses/PartierUpdated'
  *              403:
- *                  $ref: '#/components/responses/mustBeAdmin'
+ *                  $ref: '#/components/responses/mustBeAdminOrPartier'
  *              400:
  *                  $ref: '#/components/responses/PartierIdNotANumber'
  *              401:
