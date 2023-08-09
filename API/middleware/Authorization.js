@@ -7,9 +7,6 @@
 */
 
 module.exports.mustBeAdmin = async (req, res, next) => {
-    
-    console.log(req.session);
-    
     if (req.session === undefined || req.session.authLevel !== 'admin') {
         res.sendStatus(403);
         return;

@@ -15,7 +15,7 @@ CREATE TABLE "user" (
     email varchar NOT NULL UNIQUE,
     password varchar NOT NULL,
     pseudo varchar(16) NOT NULL UNIQUE,
-    phoneNumber varchar(10) NOT NULL,
+    phoneNumber varchar(16) NOT NULL,
     hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
     isAdmin boolean NOT NULL DEFAULT false
 );

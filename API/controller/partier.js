@@ -287,7 +287,7 @@ module.exports.deletePartier = async (req, res) => {
         ImageModel.saveImage(profilePicture.buffer, email, './public/profile_picture', "jpeg").then(() => {
             console.log('Image saved');
         }).catch((error) => {
-            console.log(error);
+            console.error(error);
             res.sendStatus(500);
         });
 

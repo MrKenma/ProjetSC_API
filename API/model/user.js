@@ -1,8 +1,5 @@
-const { getHash } = require("../utils/utils");
-
 module.exports.postUser = async (email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client) => {
-    encryptedPassword = await getHash(password);
-    return await client.query(`INSERT INTO "user" (email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [email, encryptedPassword, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin]);
+    return await client.query(`INSERT INTO "user" (email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin]);
 }
 
 module.exports.getAllUsers = async (client) => {
@@ -18,8 +15,7 @@ module.exports.getUserByEmail = async (email, client) => {
 }
 
 module.exports.updateUser = async (id, email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client) => {
-    encryptedPassword = await getHash(password);
-    return await client.query(`UPDATE "user" SET email = $1, password = $2, pseudo = $3, phoneNumber = $4, hasUploadedProfilePicture = $5, isAdmin = $6 WHERE id = $7`, [email, encryptedPassword, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, id]);
+    return await client.query(`UPDATE "user" SET email = $1, password = $2, pseudo = $3, phoneNumber = $4, hasUploadedProfilePicture = $5, isAdmin = $6 WHERE id = $7`, [email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, id]);
 }
 
 module.exports.deleteUser = async (id, client) => {

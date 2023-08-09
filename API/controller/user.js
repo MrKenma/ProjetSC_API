@@ -9,7 +9,7 @@ const PartierModel = require('../model/partier');
 const OrganizationModel = require('../model/organization');
 const ImageModel = require('../model/image');
 
-const { compareHash } = require('../utils/utils');
+const { compareHash, getHash} = require('../utils/utils');
 const { decode } = require("punycode");
 const { parse } = require("path");
 
@@ -26,7 +26,7 @@ module.exports.postUser = async (req, res) => {
             return;
         }
 
-        await UserModel.postTown(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client);
+        //await UserModel.postTown(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin, client);
 
         res.sendStatus(201);
 
@@ -75,7 +75,6 @@ module.exports.getUser = async (req, res) => {
     try {
 
         if (isNaN(id)) {
-            console.log('id is not a number');
             res.sendStatus(400);
             return;
         }
@@ -107,6 +106,8 @@ module.exports.updateUser = async (req, res) => {
     
     try {
 
+        await client.query('BEGIN');
+
         if (isNaN(id)) {
             res.sendStatus(400);
             return;
@@ -121,33 +122,42 @@ module.exports.updateUser = async (req, res) => {
             return;
         }
 
-        const { email, password, pseudo, phonenumber, hasuploadedprofilepicture, isadmin } = req.body;
+        const { email, password, pseudo, phoneNumber } = req.body;
+
+        // Photo de profil
+        const hasUploadedProfilePicture = req.files.profilePicture !== undefined;
+
+        if (hasUploadedProfilePicture)
+            await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture');
+
+        // Update user
+        let encryptedPassword = password ? await getHash(password) : password;
 
         const updateUser = [
             email || user.email,
-            password || user.password,
+            encryptedPassword || user.password,
             pseudo || user.pseudo,
-            phonenumber || user.phonenumber,
-            hasuploadedprofilepicture || user.hasuploadedprofilepicture,
-            isadmin || user.isadmin
+            phoneNumber || user.phonenumber,
+            hasUploadedProfilePicture || user.hasuploadedprofilepicture,
+            user.isadmin
         ]
 
         await UserModel.updateUser(id, ...updateUser, client);
 
+        await client.query('COMMIT');
         res.sendStatus(204);
 
     } catch (error) {
 
+        await client.query('ROLLBACK');
         console.error(error);
         res.sendStatus(500);
 
     } finally {
 
         client.release();
+
     }
-
-
-
 }
 
 module.exports.deleteUser = async (req, res) => {
@@ -237,8 +247,6 @@ module.exports.register = async (req, res) => {
 
     const { pseudo, email, password, phoneNumber } = req.body;
 
-    console.log(req.body);
-
     try {
 
         await client.query('BEGIN')
@@ -264,9 +272,10 @@ module.exports.register = async (req, res) => {
         const hasUploadedProfilePicture = req.files.profilePicture !== undefined;
 
         if (hasUploadedProfilePicture) 
-            await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture', "jpeg");
-            
-        const result  = await UserModel.postUser(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
+            await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture');
+
+        const encryptedPassword = await getHash(password);
+        const result  = await UserModel.postUser(email, encryptedPassword, pseudo, phoneNumber, hasUploadedProfilePicture, false, client);
 
         const userID = result.rows[0].id;
 
@@ -387,7 +396,6 @@ module.exports.login = async (req, res) => {
         client.release();
 
     }
-
 
 }
 

@@ -1,6 +1,8 @@
 const pool = require('../model/database');
 const OrganizationModel = require('../model/organization');
 const ImageModel = require('../model/image');
+const OrganizationORM = require('../ORM/model/organization');
+const UserORM = require('../ORM/model/user');
 
 /***************** CRUD for organization *****************/
 
@@ -41,8 +43,10 @@ module.exports.getAllOrganizations = async (req, res) => {
 
     try {
 
-        const {rows: organizations} = await OrganizationModel.getAllOrganizations(client);
-        
+        const organizations = await OrganizationORM.findAll({
+            include: UserORM
+        });
+
         if (organizations === undefined) {
             res.sendStatus(404);
             return;
@@ -85,10 +89,11 @@ module.exports.getOrganization = async (req, res) => {
             return;
         }
 
-        const {rows: organizations} = await OrganizationModel.getOrganization(id, client);
-        const organization = organizations[0];
+        const organization = await OrganizationORM.findByPk(id, {
+            include: UserORM
+        });
 
-        if (organization !== undefined) {
+        if (organization === undefined) {
             res.sendStatus(404);
             return;
         }
