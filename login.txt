@@ -1,0 +1,11 @@
+ADMINISTRATEUR:
+login=admin@gmail.com
+mdp=password
+
+ORGANISATEUR:
+login=organization@gmail.com
+mdp=password
+
+SORTEUR:
+login=partier@gmail.com
+mdp=password
