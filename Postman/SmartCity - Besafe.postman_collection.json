@@ -24,7 +24,7 @@
 									"pm.test(\"Verify user's property\", function () {\r",
 									"    var jsonData = pm.response.json().user;\r",
 									"    \r",
-									"    pm.expect(jsonData.id).to.eql(8);\r",
+									"    pm.expect(jsonData.id).to.eql(2);\r",
 									"    pm.expect(jsonData.email).to.eql(\"admin@gmail.com\");\r",
 									"    pm.expect(jsonData.password).to.eql(\"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\");\r",
 									"    pm.expect(jsonData.pseudo).to.eql(\"Admin\");\r",
@@ -212,48 +212,17 @@
 									"listen": "test",
 									"script": {
 										"exec": [
+											"pm.test(\"Verify satus code\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
 											"pm.test(\"Get all users with a valid admin token\", function() {\r",
 											"    pm.response.to.have.status(200);\r",
 											"\r",
 											"    const expectedUsersData = [\r",
 											"    {\r",
-											"        \"id\": 2,\r",
-											"        \"email\": \"cercleEco@gmail.com\",\r",
-											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
-											"        \"pseudo\": \"Cercle Eco\",\r",
-											"        \"phonenumber\": \"0478965467\",\r",
-											"        \"hasuploadedprofilepicture\": false,\r",
-											"        \"isadmin\": false\r",
-											"    },\r",
-											"    {\r",
-											"        \"id\": 3,\r",
-											"        \"email\": \"cercleChigé@gmail.com\",\r",
-											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
-											"        \"pseudo\": \"Cercle Chigé\",\r",
-											"        \"phonenumber\": \"086754654\",\r",
-											"        \"hasuploadedprofilepicture\": false,\r",
-											"        \"isadmin\": false\r",
-											"    },\r",
-											"    {\r",
-											"        \"id\": 5,\r",
-											"        \"email\": \"etu44108@henallux.be\",\r",
-											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
-											"        \"pseudo\": \"Sim\",\r",
-											"        \"phonenumber\": \"0499172696\",\r",
-											"        \"hasuploadedprofilepicture\": false,\r",
-											"        \"isadmin\": false\r",
-											"    },\r",
-											"    {\r",
-											"        \"id\": 6,\r",
-											"        \"email\": \"etu47233@henallux.be\",\r",
-											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
-											"        \"pseudo\": \"MrKenma\",\r",
-											"        \"phonenumber\": \"0499579465\",\r",
-											"        \"hasuploadedprofilepicture\": false,\r",
-											"        \"isadmin\": false\r",
-											"    },\r",
-											"    {\r",
-											"        \"id\": 7,\r",
+											"        \"id\": 1,\r",
 											"        \"email\": \"fhmqez@gmail.com\",\r",
 											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
 											"        \"pseudo\": \"Pseudo\",\r",
@@ -262,7 +231,7 @@
 											"        \"isadmin\": true\r",
 											"    },\r",
 											"    {\r",
-											"        \"id\": 8,\r",
+											"        \"id\": 2,\r",
 											"        \"email\": \"admin@gmail.com\",\r",
 											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
 											"        \"pseudo\": \"Admin\",\r",
@@ -271,16 +240,7 @@
 											"        \"isadmin\": true\r",
 											"    },\r",
 											"    {\r",
-											"        \"id\": 10,\r",
-											"        \"email\": \"organization@gmail.com\",\r",
-											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
-											"        \"pseudo\": \"Organization\",\r",
-											"        \"phonenumber\": \"0498262586\",\r",
-											"        \"hasuploadedprofilepicture\": false,\r",
-											"        \"isadmin\": false\r",
-											"    },\r",
-											"    {\r",
-											"        \"id\": 1,\r",
+											"        \"id\": 3,\r",
 											"        \"email\": \"cercleIESN@gmail.com\",\r",
 											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
 											"        \"pseudo\": \"Cercle IESN\",\r",
@@ -290,6 +250,24 @@
 											"    },\r",
 											"    {\r",
 											"        \"id\": 4,\r",
+											"        \"email\": \"cercleEco@gmail.com\",\r",
+											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"        \"pseudo\": \"Cercle Eco\",\r",
+											"        \"phonenumber\": \"0478965467\",\r",
+											"        \"hasuploadedprofilepicture\": false,\r",
+											"        \"isadmin\": false\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 5,\r",
+											"        \"email\": \"cercleChigé@gmail.com\",\r",
+											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"        \"pseudo\": \"Cercle Chigé\",\r",
+											"        \"phonenumber\": \"086754654\",\r",
+											"        \"hasuploadedprofilepicture\": false,\r",
+											"        \"isadmin\": false\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 6,\r",
 											"        \"email\": \"etu44721@henallux.be\",\r",
 											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
 											"        \"pseudo\": \"Wan\",\r",
@@ -298,11 +276,38 @@
 											"        \"isadmin\": false\r",
 											"    },\r",
 											"    {\r",
-											"        \"id\": 12,\r",
+											"        \"id\": 7,\r",
+											"        \"email\": \"etu44108@henallux.be\",\r",
+											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"        \"pseudo\": \"Sim\",\r",
+											"        \"phonenumber\": \"0499172696\",\r",
+											"        \"hasuploadedprofilepicture\": false,\r",
+											"        \"isadmin\": false\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 8,\r",
+											"        \"email\": \"etu47233@henallux.be\",\r",
+											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"        \"pseudo\": \"MrKenma\",\r",
+											"        \"phonenumber\": \"0499579465\",\r",
+											"        \"hasuploadedprofilepicture\": false,\r",
+											"        \"isadmin\": false\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 9,\r",
 											"        \"email\": \"partier@gmail.com\",\r",
 											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
 											"        \"pseudo\": \"Partier\",\r",
 											"        \"phonenumber\": \"0498262596\",\r",
+											"        \"hasuploadedprofilepicture\": false,\r",
+											"        \"isadmin\": false\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 10,\r",
+											"        \"email\": \"organization@gmail.com\",\r",
+											"        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r",
+											"        \"pseudo\": \"Organization\",\r",
+											"        \"phonenumber\": \"0498262586\",\r",
 											"        \"hasuploadedprofilepicture\": false,\r",
 											"        \"isadmin\": false\r",
 											"    }\r",
@@ -640,7 +645,7 @@
 						"header": [
 							{
 								"key": "email",
-								"value": "partier%40gmail.com",
+								"value": "admin%40gmail.com",
 								"type": "text"
 							},
 							{
@@ -659,7 +664,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/partier/8",
+							"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/partier/",
 							"protocol": "http",
 							"host": [
 								"{{BASE_URL}}"
@@ -668,7 +673,7 @@
 							"path": [
 								"{{VERSION}}",
 								"partier",
-								"8"
+								""
 							]
 						}
 					},
@@ -722,7 +727,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/user/12",
+									"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/user/5",
 									"protocol": "http",
 									"host": [
 										"{{BASE_URL}}"
@@ -731,7 +736,7 @@
 									"path": [
 										"{{VERSION}}",
 										"user",
-										"12"
+										"5"
 									]
 								}
 							},
@@ -923,46 +928,47 @@
 				},
 				{
 					"name": "postUser",
-					"item": []
-				},
-				{
-					"name": "postUser valid",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "email",
-								"value": "admin%40gmail.com",
-								"type": "text"
+					"item": [
+						{
+							"name": "postUser valid",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
 							},
-							{
-								"key": "password",
-								"value": "password",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "    {\r\n        \"id\": 9,\r\n        \"email\": \"partier@gmail.com\",\r\n        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r\n        \"pseudo\": \"Partier\",\r\n        \"phonenumber\": \"0498262596\",\r\n        \"hasuploadedprofilepicture\": false,\r\n        \"isadmin\": false\r\n    },"
-						},
-						"url": {
-							"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/user/",
-							"protocol": "http",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"{{VERSION}}",
-								"user",
-								""
-							]
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "email",
+										"value": "admin%40gmail.com",
+										"type": "text"
+									},
+									{
+										"key": "password",
+										"value": "password",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"id\": 9,\r\n        \"email\": \"partier@gmail.com\",\r\n        \"password\": \"$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe\",\r\n        \"pseudo\": \"Partier\",\r\n        \"phonenumber\": \"0498262596\",\r\n        \"hasuploadedprofilepicture\": false,\r\n        \"isadmin\": false\r\n    },"
+								},
+								"url": {
+									"raw": "http://{{BASE_URL}}:{{PORT}}/{{VERSION}}/partier/",
+									"protocol": "http",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"port": "{{PORT}}",
+									"path": [
+										"{{VERSION}}",
+										"partier",
+										""
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		}
