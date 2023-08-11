@@ -7,6 +7,11 @@ module.exports.getUuidFromEmail = (email) => {
 }
 
 module.exports.saveImage = async (imageBuffer, imageName, destFolder) => {
+
+    if (!fs.existsSync(destFolder)) {
+        fs.mkdirSync(destFolder);
+    }
+
     return sharp(imageBuffer)
     .jpeg()
     .resize(
@@ -19,6 +24,11 @@ module.exports.saveImage = async (imageBuffer, imageName, destFolder) => {
 }
 
 module.exports.savePDF = async (pdfBuffer, pdfName, destFolder) => {
+
+    if (!fs.existsSync(destFolder)) {
+        fs.mkdirSync(destFolder);
+    }
+
     return fs.writeFileSync(`${destFolder}/${getUuid(pdfName)}.pdf`, pdfBuffer);
 }
 
