@@ -15,7 +15,7 @@ module.exports.updateOrganization = async (userID, responsibleName, isVerified, 
 }
 
 module.exports.deleteOrganization = async (id, client) => {
-    return await client.query(`DELETE FROM organization WHERE id = $1`, [id]);
+    return await client.query(`DELETE FROM organization WHERE userid = $1`, [id]);
 }
 
 /*

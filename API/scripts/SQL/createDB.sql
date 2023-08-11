@@ -86,15 +86,15 @@ CREATE TABLE shuttleMember (
 -- user
 INSERT INTO "user"(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES
 ('fhmqez@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Pseudo', '0499270747', false, true),
-('admin@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Admin', '0498262596', false, true),
+('admin@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Admin', '0498262596', false, true),
 ('cercleIESN@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle IESN', '0498867457', false, false),
 ('cercleEco@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Eco', '0478965467', false, false),
 ('cercleChigé@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Chigé', '086754654', false, false),
 ('etu44721@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Wan', '0499517092', false, false),
 ('etu44108@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Sim', '0499172696', false, false),
 ('etu47233@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'MrKenma', '0499579465', false, false),
-('partier@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Partier', '0498262596', false, false),
-('organization@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Organization', '0498262586', false, false);
+('partier@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Partier', '0498262596', false, false),
+('organization@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Organization', '0498262586', false, false);
 
 -- organization
 INSERT INTO organization (userID, responsibleName, isVerified) VALUES

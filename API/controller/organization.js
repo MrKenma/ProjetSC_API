@@ -254,7 +254,7 @@ module.exports.deleteOrganization = async (req, res) => {
                 await ShuttleMemberModel.deleteAllByShuttle(shuttle.id, client);
             }
             await ShuttleModel.deleteShuttlesByEvent(event.id, client);
-            await EventModel.deleteEvent(id, client);
+            await EventModel.deleteEvent(event.id, client);
         }
 
         await OrganizationModel.deleteOrganization(id, client);
