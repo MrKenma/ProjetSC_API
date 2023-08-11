@@ -232,13 +232,10 @@ module.exports.updatePartier = async (req, res) => {
  *          description: L'id du partier n'est pas un nombre
  */
 module.exports.deletePartier = async (req, res) => {
-
     const client = await pool.connect();
     const userID = req.params.id;
 
     try {
-
-        await client.query('BEGIN');
         
         if (isNaN(userID)) {
             res.sendStatus(400);
@@ -259,19 +256,19 @@ module.exports.deletePartier = async (req, res) => {
             await ImageModel.deleteFile("./public/profile_picture", user.email, "jpeg");
         }
 
-        await ShuttleMemberModel.deleteAllByPartier(userID, client);
         await PartierModel.deletePartier(userID, client);
-        await UserModel.deleteUser(userID, client);
 
-        await client.query('COMMIT');
         res.sendStatus(204);
        
     } catch (error) {
-        await client.query('ROLLBACK');
+
         console.error(error);
         res.sendStatus(500);
+
     } finally {
+
         client.release();
+
     }
 }
 

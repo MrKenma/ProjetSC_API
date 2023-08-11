@@ -299,8 +299,6 @@ module.exports.deleteEvent = async (req, res) => {
 
     try {
 
-        await client.query('BEGIN');
-
         if (isNaN(id)) {
             res.sendStatus(400);
             return;
@@ -316,19 +314,12 @@ module.exports.deleteEvent = async (req, res) => {
             return;
         }
 
-        const { rows: shuttles } = await ShuttleModel.getShuttlesByEvent(event.id, client);
-        for (const shuttle of shuttles) {
-            await ShuttleMemberModel.deleteAllByShuttle(shuttle.id, client);
-        }
-        await ShuttleModel.deleteShuttlesByEvent(event.id, client);
         await EventModel.deleteEvent(id, client);
 
-        await client.query('COMMIT');
         res.sendStatus(204); 
 
     } catch (error) {
 
-        await client.query('ROLLBACK');
         console.error(error);
         res.sendStatus(500);
 

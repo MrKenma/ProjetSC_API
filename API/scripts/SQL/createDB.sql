@@ -56,9 +56,10 @@ CREATE TABLE event (
     departingPoint varchar(64) NOT NULL,
     startDateTime timestamp NOT NULL,
     endDateTime timestamp NOT NULL,
-    organizationID integer REFERENCES organization(userID) NOT NULL,
+    organizationID integer NOT NULL,
     addressTown varchar NOT NULL,
     addressZipCode integer NOT NULL,
+    FOREIGN KEY (organizationID) REFERENCES organization(userID) ON DELETE CASCADE,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
 );
 
@@ -69,6 +70,7 @@ CREATE TABLE shuttle (
     eventId integer REFERENCES event(id) NOT NULL,
     destinationTown varchar,
     destinationZipCode integer,
+    FOREIGN KEY (eventId) REFERENCES event(id) ON DELETE CASCADE,
     FOREIGN KEY (destinationTown, destinationZipCode) REFERENCES town(name, zipCode),
     UNIQUE (departureTime, eventId, destinationTown, destinationZipCode)
 );
@@ -77,8 +79,10 @@ CREATE TABLE shuttle (
 CREATE TABLE shuttleMember (
     hasValidated boolean NOT NULL DEFAULT false,
     hasArrivedSafely boolean NOT NULL DEFAULT false,
-    shuttleId integer REFERENCES shuttle(id) DEFERRABLE INITIALLY IMMEDIATE,
-    partierId integer REFERENCES partier(userID) DEFERRABLE INITIALLY IMMEDIATE,
+    shuttleId integer,
+    partierId integer,
+    FOREIGN KEY (shuttleId) REFERENCES shuttle(id) ON DELETE CASCADE,
+    FOREIGN KEY (partierId) REFERENCES partier(userID) ON DELETE CASCADE,
     PRIMARY KEY (shuttleId, partierId)
 );
 
