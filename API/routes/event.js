@@ -25,7 +25,6 @@ const IdentificationJWT = require('../middleware/IdentificationJWT');
  *          500:
  *              description: Erreur serveur
  */
-
 router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier, EventController.getAllEvents);
 
 /**
@@ -54,7 +53,6 @@ router.get('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrg
  *          500:
  *              description: Erreur serveur
  */
-
 router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganizationOrPartier , EventController.search);
 
 
@@ -88,7 +86,6 @@ router.get('/search/:id', IdentificationJWT.identification, Authorization.mustBe
  *          500:
  *              description: Erreur serveur
  */
-
 router.get('/organization/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEventsByOrganization);
 
 /**
@@ -117,7 +114,6 @@ router.get('/organization/:id', IdentificationJWT.identification, Authorization.
  *          500:
  *              description: Erreur serveur
  */
-
 router.get('/:id', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.getEvent);
 
 /**
@@ -179,7 +175,6 @@ router.get('/nameExists/:name', IdentificationJWT.identification, Authorization.
  *                  409:
  *                      $ref: '#/components/responses/EventNameAlreadyExists'
  */
-
 router.post('/', IdentificationJWT.identification, Authorization.mustBeAdminOrOrganization, EventController.postEvent);
 
 /**
@@ -242,7 +237,6 @@ router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, E
  *                  500:
  *                      description: Erreur serveur
  */
-
 router.delete('/:id', IdentificationJWT.identification, Authorization.mustBeAdmin, EventController.deleteEvent);
 
 module.exports = router;

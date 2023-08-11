@@ -1,6 +1,10 @@
 const pool = require('../model/database');
 const OrganizationModel = require('../model/organization');
 const ImageModel = require('../model/image');
+const UserModel = require('../model/user');
+const EventModel = require('../model/event');
+const ShuttleModel = require('../model/shuttle');
+const ShuttleMemberModel = require('../model/shuttleMember');
 const OrganizationORM = require('../ORM/model/organization');
 const UserORM = require('../ORM/model/user');
 
@@ -225,25 +229,45 @@ module.exports.deleteOrganization = async (req, res) => {
 
     try {
 
+        await client.query('BEGIN');
+
         if (isNaN(id)) {
             res.sendStatus(400);
             return;
         }
 
-        const { rows } = await OrganizationModel.getOrganization(id, client);
+        const { rows: organizations } = await OrganizationModel.getOrganization(id, client);
+        const organization = organizations[0];
+        const { rows: users } = await UserModel.getUser(id, client);
+        const user = users[0];
 
-        if (rows[0] === undefined) {
+        if (organization === undefined || user === undefined) {
             res.sendStatus(404);
             return;
         }
 
+        const { rows: events } = await EventModel.getEventsByOrganization(id, client);
+        let shuttles;
+        for (const event of events) {
+            shuttles = await ShuttleModel.getShuttlesByEvent(event.id, client);
+            for (const shuttle of shuttles) {
+                await ShuttleMemberModel.deleteAllByShuttle(shuttle.id, client);
+            }
+            await ShuttleModel.deleteShuttlesByEvent(event.id, client);
+            await EventModel.deleteEvent(id, client);
+        }
+
         await OrganizationModel.deleteOrganization(id, client);
+        await UserModel.deleteUser(id, client);
+
+        await client.query('COMMIT');
         res.sendStatus(204);
 
     } catch (error) {
-            
-            console.error(error);
-            res.sendStatus(500);
+
+        await client.query('ROLLBACK');
+        console.error(error);
+        res.sendStatus(500);
     
     } finally {
         client.release();

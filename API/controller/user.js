@@ -114,7 +114,6 @@ module.exports.updateUser = async (req, res) => {
         }
 
         const {rows: users} = await UserModel.getUser(id, client);
-
         const user = users[0];
 
         if (user === undefined) {
@@ -124,6 +123,16 @@ module.exports.updateUser = async (req, res) => {
 
         const { email, password, pseudo, phoneNumber } = req.body;
 
+        if (await UserModel.emailExists(email, client) && email !== user.email) {
+            res.sendStatus(409).send('Email already used');
+            return;
+        }
+
+        if (await UserModel.pseudoExists(pseudo, client) && pseudo !== user.pseudo) {
+            res.sendStatus(409).send('Pseudo already used');
+            return;
+        }
+
         // Photo de profil
         const hasUploadedProfilePicture = req.files.profilePicture !== undefined;
 
@@ -131,7 +140,7 @@ module.exports.updateUser = async (req, res) => {
             await ImageModel.saveImage(req.files.profilePicture[0].buffer, email, './public/profile_picture');
 
         // Update user
-        let encryptedPassword = password ? await getHash(password) : password;
+        const encryptedPassword = password ? await getHash(password) : password;
 
         const updateUser = [
             email || user.email,
@@ -140,9 +149,51 @@ module.exports.updateUser = async (req, res) => {
             phoneNumber || user.phonenumber,
             hasUploadedProfilePicture || user.hasuploadedprofilepicture,
             user.isadmin
-        ]
+        ];
 
         await UserModel.updateUser(id, ...updateUser, client);
+
+        if (req.body.partier !== undefined) {
+            const { firstName, lastName, refPhoneNumber, addressTown, addressZipCode } = JSON.parse(req.body.partier);
+
+            const { rows: partiers } = await PartierModel.getPartier(id, client);
+            const partier = partiers[0];
+
+            if (partier === undefined) {
+                await client.query('ROLLBACK');
+                res.sendStatus(404);
+                return;
+            }
+
+            const updatePartier = [
+                firstName || partier.firstname,
+                lastName || partier.lastname,
+                refPhoneNumber || partier.refphonenumber,
+                addressTown || partier.addresstown,
+                addressZipCode || partier.addresszipcode
+            ];
+
+            await PartierModel.updatePartier(id, ...updatePartier, client);
+        } else if (req.body.organization !== undefined) {
+            let { responsibleName, isVerified } = JSON.parse(req.body.organization);
+
+            const { rows: organizations } = await OrganizationModel.getOrganization(id, client);
+            const organization = organizations[0];
+
+            if (organization === undefined) {
+                await client.query('ROLLBACK');
+                res.sendStatus(404);
+                return;
+            }
+
+            if (req.files.proof !== undefined) {
+                await ImageModel.savePDF(req.files.proof[0].buffer, email, './public/proof');
+            }
+
+            responsibleName = responsibleName || organization.responsiblename;
+
+            await OrganizationModel.updateOrganization(id, responsibleName, isVerified, client);
+        }
 
         await client.query('COMMIT');
         res.sendStatus(204);
@@ -249,7 +300,7 @@ module.exports.register = async (req, res) => {
 
     try {
 
-        await client.query('BEGIN')
+        await client.query('BEGIN');
 
         if (pseudo === undefined || email === undefined || password === undefined || phoneNumber === undefined ) {
             res.sendStatus(400);
@@ -303,7 +354,9 @@ module.exports.register = async (req, res) => {
 
             await OrganizationModel.postOrganization(userID, responsibleName, false, client);
 
-            await ImageModel.savePDF(req.files.proof[0].buffer, email, './public/proof');
+            const hasUploadedProof = req.files.proof !== undefined;
+            if (hasUploadedProof)
+                await ImageModel.savePDF(req.files.proof[0].buffer, email, './public/proof');
 
         } else {
             await client.query('ROLLBACK');

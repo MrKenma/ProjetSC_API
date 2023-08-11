@@ -1,6 +1,8 @@
 const pool = require('../model/database');
 const sequelize = require('../ORM/sequelize');
 const EventModel = require('../model/event');
+const ShuttleModel = require('../model/shuttle');
+const ShuttleMemberModel = require('../model/shuttleMember');
 const EventORM = require('../ORM/model/event');
 const OrganizationORM = require('../ORM/model/organization');
 const UserORM = require('../ORM/model/user');
@@ -154,12 +156,13 @@ module.exports.getEvent = async (req, res) => {
 module.exports.postEvent = async (req, res) => {
     const client = await pool.connect();
     
-    const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, addresstown, addresszipcode } = req.body;
-    const organizationid = parseInt(req.body.organizationid);
+    const { name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, addressTown, addressZipCode } = req.body;
+    const organizationId = parseInt(req.body.organizationId);
 
     try {
+        console.log(req.body);
 
-        if (name === undefined || description === undefined || nameandnumstreet === undefined || departingpoint === undefined || startdatetime === undefined || enddatetime === undefined || organizationid === undefined || addresstown === undefined || addresszipcode === undefined) {
+        if (name === undefined || description === undefined || nameAndNumStreet === undefined || departingPoint === undefined || startDateTime === undefined || endDateTime === undefined || organizationId === undefined || addressTown === undefined || addressZipCode === undefined) {
             res.sendStatus(400);
             return;
         }
@@ -171,7 +174,7 @@ module.exports.postEvent = async (req, res) => {
             return;
         }
 
-        await EventModel.postEvent(name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode, client);
+        await EventModel.postEvent(name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode, client);
         res.sendStatus(201);
 
     } catch (error) {
@@ -245,7 +248,6 @@ module.exports.updateEvent = async (req, res) => {
         }
 
         const { rows : events } = await EventModel.getEvent(id, client);
-
         const event = events[0];
 
         if (event === undefined) {
@@ -253,18 +255,18 @@ module.exports.updateEvent = async (req, res) => {
             return;
         }
 
-        const { name, description, nameandnumstreet, departingpoint, startdatetime, enddatetime, organizationid, addresstown, addresszipcode } = req.body;
+        const { name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode } = req.body;
 
         const updatedEvent = [
             name || event.name,
             description || event.description,
-            nameandnumstreet || event.nameandnumstreet,
-            departingpoint || event.departingpoint,
-            startdatetime || event.startdatetime,
-            enddatetime || event.enddatetime,
-            organizationid || event.organizationid,
-            addresstown || event.addresstown,
-            addresszipcode || event.addresszipcode
+            nameAndNumStreet || event.nameandnumstreet,
+            departingPoint || event.departingpoint,
+            startDateTime || event.startdatetime,
+            endDateTime || event.enddatetime,
+            organizationId || event.organizationid,
+            addressTown || event.addresstown,
+            addressZipCode || event.addresszipcode
         ]
 
         await EventModel.updateEvent(id, ...updatedEvent, client);
@@ -294,17 +296,20 @@ module.exports.updateEvent = async (req, res) => {
 
 module.exports.deleteEvent = async (req, res) => {
     const client = await pool.connect();
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     try {
+
+        await client.query('BEGIN');
 
         if (isNaN(id)) {
             res.sendStatus(400);
             return;
         }
 
-        const { rows: events } = EventModel.getEvent(id, client);
+        console.log(id);
 
+        const { rows: events } = await EventModel.getEvent(id, client);
         const event = events[0];
 
         if (event === undefined) {
@@ -312,18 +317,25 @@ module.exports.deleteEvent = async (req, res) => {
             return;
         }
 
+        const { rows: shuttles } = await ShuttleModel.getShuttlesByEvent(event.id, client);
+        for (const shuttle of shuttles) {
+            await ShuttleMemberModel.deleteAllByShuttle(shuttle.id, client);
+        }
+        await ShuttleModel.deleteShuttlesByEvent(event.id, client);
         await EventModel.deleteEvent(id, client);
+
+        await client.query('COMMIT');
         res.sendStatus(204); 
 
     } catch (error) {
 
+        await client.query('ROLLBACK');
         console.error(error);
         res.sendStatus(500);
 
     } finally {
         client.release();
     }
-
 }
 
 /**

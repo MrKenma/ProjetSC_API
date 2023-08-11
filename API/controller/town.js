@@ -29,6 +29,30 @@ module.exports.getAllTowns = async (req, res) => {
     }
 }
 
+module.exports.townExists = async (req, res) => {
+    const client = await pool.connect();
+    const name = req.query.name;
+    const zipCode = req.query.zipCode;
+
+    try {
+
+        if (name === undefined || zipCode === undefined) {
+            res.sendStatus(400);
+            return;
+        }
+
+        res.json(await TownModel.townExists(name, zipCode, client));
+
+    } catch (error) {
+
+        console.error(error);
+        res.sendStatus(500);
+
+    } finally {
+        client.release();
+    }
+}
+
 module.exports.postTown = async (req, res) => {
     const client = await pool.connect();
     const { name, zipCode } = req.body;
@@ -36,14 +60,11 @@ module.exports.postTown = async (req, res) => {
     try {
 
         if ( name === undefined || zipCode === undefined ) {
-
             res.sendStatus(400);
             return;
-            
         }
 
         await TownModel.postTown(name, zipCode, client);
-
         res.sendStatus(201);
 
     } catch (error) {
@@ -55,36 +76,6 @@ module.exports.postTown = async (req, res) => {
 
         client.release();
 
-    }
-}
-
-module.exports.deleteTown = async (req, res) => {
-    const client = await pool.connect();
-    const { name, zipCode } = req.query;
-
-    try {
-
-        if ( name === undefined || zipCode === undefined ) {
-            res.sendStatus(400);
-            return;
-        }
-
-        const {rows: towns} = await TownModel.getTown(name, zipCode, client);
-
-        if (towns === undefined) {
-            res.sendStatus(404);
-            return;
-        }
-
-        await TownModel.deleteTown(name, zipCode, client);
-
-    } catch (error) {
-
-        console.error(error);
-        res.sendStatus(500);
-
-    } finally {
-        client.release();
     }
 }
 

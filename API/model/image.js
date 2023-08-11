@@ -20,5 +20,11 @@ module.exports.saveImage = async (imageBuffer, imageName, destFolder) => {
 
 module.exports.savePDF = async (pdfBuffer, pdfName, destFolder) => {
     return fs.writeFileSync(`${destFolder}/${getUuid(pdfName)}.pdf`, pdfBuffer);
-} 
+}
+
+module.exports.deleteFile = async (destFolder, name, type) => {
+    return fs.unlinkSync(`${destFolder}/${getUuid(name)}.${type}`);
+}
+
+
 

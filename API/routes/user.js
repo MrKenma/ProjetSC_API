@@ -231,7 +231,7 @@ router.post('/', IdentificationJWT.identification, Authorization.mustBeAdmin, Us
  *       500:
  *         description: Erreur serveur
  */
-router.patch('/', IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.updateUser);
+router.patch('/', upload.fields([{ name: "profilePicture", maxCount: 1 }]), IdentificationJWT.identification, Authorization.mustBeAdmin, UserController.updateUser);
 
 /**
  * @swagger

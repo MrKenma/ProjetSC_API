@@ -1,5 +1,10 @@
 const pool = require('../model/database');
 const PartierModel = require('../model/partier');
+const UserModel = require('../model/user');
+const ShuttleMemberModel = require('../model/shuttleMember');
+const ImageModel = require('../model/image');
+const PartierORM = require('../ORM/model/partier');
+const UserORM = require('../ORM/model/user');
 
 /***************** CRUD for partier *****************/
 /**
@@ -47,7 +52,10 @@ module.exports.getAllPartiers = async (req, res) => {
     const client = await pool.connect();
     
     try {
-        const {rows: partiers} = await PartierModel.getAllPartiers(client);
+
+        const partiers = await PartierORM.findAll({
+            include: UserORM
+        });
 
         if (partiers === undefined) {
             res.sendStatus(404);
@@ -55,11 +63,16 @@ module.exports.getAllPartiers = async (req, res) => {
         }
 
         res.json(partiers);
+
     } catch (error) {
+
         console.error(error);
         res.sendStatus(500);
+
     } finally {
+
         client.release();
+
     }
 }
 
@@ -87,9 +100,9 @@ module.exports.getPartier = async (req, res) => {
             return;
         }
 
-        const {rows : partiers} = await PartierModel.getPartier(id, client);
-
-        const partier = partiers[0];
+        const partier = await PartierORM.findByPk(id, {
+            include: UserORM
+        });
 
         if (partier === undefined) {
             res.sendStatus(404);
@@ -223,6 +236,8 @@ module.exports.deletePartier = async (req, res) => {
     const userID = req.params.id;
 
     try {
+
+        await client.query('BEGIN');
         
         if (isNaN(userID)) {
             res.sendStatus(400);
@@ -230,90 +245,34 @@ module.exports.deletePartier = async (req, res) => {
         }
 
         const {rows: partiers} = await PartierModel.getPartier(userID, client);
-
         const partier = partiers[0];
+        const {rows: users} = await UserModel.getUser(userID, client);
+        const user = users[0];
 
-        if (partier === undefined) {
+        if (partier === undefined || user === undefined) {
             res.sendStatus(404);
             return;
         }
 
+        if (user.hasuploadedprofilepicture) {
+            await ImageModel.deleteFile("./public/profile_picture", user.email, "jpeg");
+        }
+
+        await ShuttleMemberModel.deleteAllByPartier(userID, client);
         await PartierModel.deletePartier(userID, client);
+        await UserModel.deleteUser(userID, client);
+
+        await client.query('COMMIT');
+        res.sendStatus(204);
        
     } catch (error) {
+        await client.query('ROLLBACK');
         console.error(error);
         res.sendStatus(500);
     } finally {
         client.release();
     }
 }
-
-/***************** CRUD for partier *****************/
-
-
-/* module.exports.registerPartier = async (req, res) => {
-    const client = await pool.connect();
-    const profilePicture = req.files.profilePicture ? req.files.profilePicture[0] : undefined;
-    const {email,
-           pseudo,
-           password,
-           firstName,
-           lastName,
-           phoneNumber,
-           refPhoneNumber,
-           isAdmin,
-           addressTown,
-           addressZipCode} = req.body;
-
-    if (email === undefined 
-        || pseudo === undefined 
-        || password === undefined 
-        || firstName === undefined 
-        || lastName === undefined 
-        || phoneNumber === undefined 
-        || refPhoneNumber === undefined 
-        || isAdmin ===undefined
-        || addressTown === undefined 
-        || addressZipCode === undefined) {
-        res.sendStatus(400);
-        return;
-    }
-
-    let hasUploadedProfilePicture = false;
-
-    if (profilePicture !== undefined) {
-        hasUploadedProfilePicture = true;
-
-        ImageModel.saveImage(profilePicture.buffer, email, './public/profile_picture', "jpeg").then(() => {
-            console.log('Image saved');
-        }).catch((error) => {
-            console.error(error);
-            res.sendStatus(500);
-        });
-
-    }
-
-    try {
-        await PartierModel.postPartier(email,
-                                       pseudo,
-                                       password,
-                                       firstName,
-                                       lastName,
-                                       hasUploadedProfilePicture,
-                                       phoneNumber,
-                                       refPhoneNumber,
-                                       isAdmin,
-                                       addressTown,
-                                       addressZipCode,
-                                       client);
-        res.sendStatus(201);
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
-    } finally {
-        client.release();
-    }
-} */
 
 
 

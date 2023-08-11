@@ -6,7 +6,6 @@ module.exports.getEvent = async (id, client) => {
     return await client.query(`SELECT * FROM event WHERE id = $1`, [id]);
 }
 
-// Pas oublier de gérer la suppression par rapport aux shuttle et shuttle_member
 module.exports.deleteEvent = async (id, client) => {
     return await client.query(`DELETE FROM event WHERE id = $1`, [id]);
 }

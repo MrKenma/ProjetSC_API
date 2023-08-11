@@ -26,3 +26,6 @@ module.exports.deleteAllByPartier = async (partierid, client) => {
     return await client.query('DELETE FROM shuttleMember WHERE partierid = $1', [partierid]);
 }
 
+module.exports.deleteAllByShuttle = async (shuttleId, client) => {
+    return await client.query('DELETE FROM shuttleMember WHERE shuttleId = $1', [shuttleId]);
+}

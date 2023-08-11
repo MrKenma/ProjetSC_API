@@ -85,22 +85,22 @@ CREATE TABLE shuttleMember (
 -- Partie remplissage de la base de données
 -- user
 INSERT INTO "user"(email, password, pseudo, phoneNumber, hasUploadedProfilePicture, isAdmin) VALUES
+('fhmqez@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Pseudo', '0499270747', false, true),
+('admin@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Admin', '0498262596', false, true),
 ('cercleIESN@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle IESN', '0498867457', false, false),
 ('cercleEco@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Eco', '0478965467', false, false),
 ('cercleChigé@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Cercle Chigé', '086754654', false, false),
 ('etu44721@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Wan', '0499517092', false, false),
 ('etu44108@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Sim', '0499172696', false, false),
 ('etu47233@henallux.be', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'MrKenma', '0499579465', false, false),
-('fhmqez@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Pseudo', '0499270747', false, true),
-('admin@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Admin', '0498262596', false, true),
-('partier@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Partier', '0498262596', false, false),
-('organization@gmail.com', '$2b$10$UYrmYvD/jGF2PiJDEVGAKeMFP.72B0IpSxt3LHxcdSAB0l8OBNsLe', 'Organization', '0498262586', false, false);
+('partier@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Partier', '0498262596', false, false),
+('organization@gmail.com', '$2a$10$l4Eecn3x1IstKmQC12a/S.RqeABVnsygeDogmBkAvOKjmB/7GUjXG', 'Organization', '0498262586', false, false);
 
 -- organization
 INSERT INTO organization (userID, responsibleName, isVerified) VALUES
-(1, 'Jean Dupont', false),
-(2, 'Guillaume Turpin', false),
-(3, 'La panthère rose', true),
+(3, 'Jean Dupont', false),
+(4, 'Guillaume Turpin', false),
+(5, 'La panthère rose', true),
 (10, 'Mr.Organization', false);
 
 -- Town
@@ -134,10 +134,9 @@ INSERT INTO town (name, zipCode) VALUES
 
 -- Partier
 INSERT INTO partier (userID, firstName, lastName, refPhoneNumber, addressTown, addressZipCode) VALUES
-(4, 'Wangi', 'Weber', '0499265087', 'Saint-Servais', 5002),
-(5, 'Simon', 'Rollus', '0499585449', 'Malonne', 5020),
-(6, 'Julien', 'Hanquet', '0499164954', 'Wierde', 5100),
-(7, 'Prénom', 'Nom', '0498629782', 'Loyers', 5101),
+(6, 'Wangi', 'Weber', '0499265087', 'Saint-Servais', 5002),
+(7, 'Simon', 'Rollus', '0499585449', 'Malonne', 5020),
+(8, 'Julien', 'Hanquet', '0499164954', 'Wierde', 5100),
 (9, 'Partier', 'Partier', '0498629782', 'Loyers', 5101);
 
 -- Event
