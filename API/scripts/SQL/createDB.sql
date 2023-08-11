@@ -141,13 +141,13 @@ INSERT INTO partier (userID, firstName, lastName, refPhoneNumber, addressTown, a
 
 -- Event
 INSERT INTO event (name, description, nameAndNumStreet, departingPoint, startDateTime, endDateTime, organizationId, addressTown, addressZipCode) VALUES
-('Bunker med', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
-('Bunker test', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
-('Bunker eco', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 2, 'Malonne', 5020),
-('Bal des bleus', 'Soirée également plutôt sympa', 'rue Joseph Calozet, 19', 'sortie du parking', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 1, 'Saint-Servais', 5002),
-('Forfaire info', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Beez', 5000),
-('Forfaire eco', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Bonnine', 5021),
-('Soirée de rentrée', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Loyers', 5101),
-('La St-nic', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Erpent', 5101),
-('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Jambes', 5100);
+('Bunker med', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 4, 'Malonne', 5020),
+('Bunker test', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 4, 'Malonne', 5020),
+('Bunker eco', 'Soirée plutôt sympa en vrai', 'rue de Bruxelles, 31', 'En fasse de l entrée', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 4, 'Malonne', 5020),
+('Bal des bleus', 'Soirée également plutôt sympa', 'rue Joseph Calozet, 19', 'sortie du parking', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 3, 'Saint-Servais', 5002),
+('Forfaire info', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 5, 'Beez', 5000),
+('Forfaire eco', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 5, 'Bonnine', 5021),
+('Soirée de rentrée', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 5, 'Loyers', 5101),
+('La St-nic', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 5, 'Erpent', 5101),
+('Soirée éco gestion', 'Soirée un peu nulle en vrai', 'rue Godefroid, 20', 'devant la gare', '2023-07-31 20:00:00', '2023-08-01 02:00:00', 5, 'Jambes', 5100);
 
