@@ -14,7 +14,7 @@ CREATE TABLE "user" (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email varchar NOT NULL UNIQUE,
     password varchar NOT NULL,
-    pseudo varchar(16) NOT NULL UNIQUE,
+    pseudo varchar(32) NOT NULL UNIQUE,
     phoneNumber varchar(16) NOT NULL,
     hasUploadedProfilePicture boolean NOT NULL DEFAULT false,
     isAdmin boolean NOT NULL DEFAULT false
@@ -40,9 +40,9 @@ CREATE TABLE partier (
     userID integer PRIMARY KEY ,
     firstName varchar(16) NOT NULL,
     lastName varchar(16) NOT NULL,
-    refPhoneNumber varchar(10),
-    addressTown varchar,
-    addressZipCode integer,
+    refPhoneNumber varchar(16),
+    addressTown varchar NOT NULL,
+    addressZipCode integer NOT NULL,
     FOREIGN KEY (userID) REFERENCES "user"(id) ON DELETE CASCADE,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
 );
@@ -57,8 +57,8 @@ CREATE TABLE event (
     startDateTime timestamp NOT NULL,
     endDateTime timestamp NOT NULL,
     organizationID integer REFERENCES organization(userID) NOT NULL,
-    addressTown varchar,
-    addressZipCode integer,
+    addressTown varchar NOT NULL,
+    addressZipCode integer NOT NULL,
     FOREIGN KEY (addressTown, addressZipCode) REFERENCES town(name, zipCode)
 );
 
