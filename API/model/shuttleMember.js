@@ -6,7 +6,7 @@ module.exports.getAllShuttleMembers = async (client) => {
     return await client.query('SELECT * FROM shuttleMember');
 }
 
-module.exports.getShuttleMembers = async (shuttleid, partierid, client) => {
+module.exports.getShuttleMember = async (shuttleid, partierid, client) => {
     return await client.query('SELECT * FROM shuttleMember WHERE shuttleid = $1 AND partierid = $2', [shuttleid, partierid]);
 }
 

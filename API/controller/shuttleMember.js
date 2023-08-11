@@ -178,7 +178,7 @@ module.exports.cancel = async (req, res) => {
             return;
         }
 
-        await ShuttleMemberModel.delete(shuttleid, partierid, client);
+        await ShuttleMemberModel.deleteShuttleMember(shuttleid, partierid, client);
 
         await ShuttleModel.deleteEmptyShuttle(shuttleid, client);
 

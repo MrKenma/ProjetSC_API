@@ -160,8 +160,7 @@ module.exports.postEvent = async (req, res) => {
     const organizationId = parseInt(req.body.organizationId);
 
     try {
-        console.log(req.body);
-
+        
         if (name === undefined || description === undefined || nameAndNumStreet === undefined || departingPoint === undefined || startDateTime === undefined || endDateTime === undefined || organizationId === undefined || addressTown === undefined || addressZipCode === undefined) {
             res.sendStatus(400);
             return;

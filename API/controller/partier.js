@@ -5,6 +5,7 @@ const ShuttleMemberModel = require('../model/shuttleMember');
 const ImageModel = require('../model/image');
 const PartierORM = require('../ORM/model/partier');
 const UserORM = require('../ORM/model/user');
+const { cp } = require('fs');
 
 /***************** CRUD for partier *****************/
 /**
@@ -19,19 +20,19 @@ const UserORM = require('../ORM/model/user');
  *           description: L'ID de l'utilisateur du Partier
  *         firstName:
  *           type: string
- *           description: Le prénom du Partier
+ *           description: Le prï¿½nom du Partier
  *         lastName:
  *           type: string
  *           description: Le nom de famille du Partier
  *         referencePhoneNumber:
  *           type: string
- *           description: Le numéro de téléphone de référence du Partier
+ *           description: Le numï¿½ro de tï¿½lï¿½phone de rï¿½fï¿½rence du Partier
  *         addressTown:
  *           type: string
- *           description: La ville de résidence du Partier
+ *           description: La ville de rï¿½sidence du Partier
  *         addressZipCode:
  *           type: integer
- *           description: Le code postal de la résidence du Partier
+ *           description: Le code postal de la rï¿½sidence du Partier
  *       example:
  *         userID: 1
  *         firstName: "Jean"
@@ -46,7 +47,7 @@ const UserORM = require('../ORM/model/user');
  * components:
  *  responses:
  *      AllPartiersFound:
- *          description: Récupère toutes les partiers
+ *          description: Rï¿½cupï¿½re toutes les partiers
  */
 module.exports.getAllPartiers = async (req, res) => {
     const client = await pool.connect();
@@ -81,13 +82,13 @@ module.exports.getAllPartiers = async (req, res) => {
  * components:
  *  responses:
  *      PartierFound:
- *          description: Récupère un partier
+ *          description: Rï¿½cupï¿½re un partier
  *      PartierNotFound:
- *          description: Le partier n'a pas été trouvé
+ *          description: Le partier n'a pas ï¿½tï¿½ trouvï¿½
  *      PartierIdNotANumber:
  *          description: L'id de l'organisation n'est pas un nombre
  *      CreatePartierBadRequest:
- *          description: Informations invalides pour créer un partier
+ *          description: Informations invalides pour crï¿½er un partier
  */
 module.exports.getPartier = async (req, res) => {
     const client = await pool.connect();
@@ -126,12 +127,12 @@ module.exports.getPartier = async (req, res) => {
  * components:
  *  responses:
  *      PartierCreated:
- *          description: Le partier a été créé
+ *          description: Le partier a ï¿½tï¿½ crï¿½ï¿½
  *      CreatePartierBadRequest:
- *          description: création impossible car l'un des paramètres n'est pas valable
+ *          description: crï¿½ation impossible car l'un des paramï¿½tres n'est pas valable
  *  requestBodies:
  *      CreatePartier:
- *          description: Le partier à créer
+ *          description: Le partier ï¿½ crï¿½er
  *          content:
  *              application/json:
  *                  schema:
@@ -165,14 +166,14 @@ module.exports.postPartier = async (req, res) => {
  * components:
  *  responses:
  *      PartierUpdated:
- *          description: L'organisation a été mise à jour
+ *          description: L'organisation a ï¿½tï¿½ mise ï¿½ jour
  *      PartierNotFound:
- *          description: L'organisation n'a pas été trouvée
+ *          description: L'organisation n'a pas ï¿½tï¿½ trouvï¿½e
  *      PartierIdNotANumber:
  *          description: L'id du partier n'est pas un nombre
  *  requestBodies:
  *      PartierUpdated:
- *          description: Le partier à mettre à jour
+ *          description: Le partier ï¿½ mettre ï¿½ jour
  *          content:
  *              application/json:
  *                  schema:
@@ -224,9 +225,9 @@ module.exports.updatePartier = async (req, res) => {
  * components:
  *  responses:
  *      PartierDeleted:
- *          description: Le partier a été supprimé
+ *          description: Le partier a ï¿½tï¿½ supprimï¿½
  *      PartierNotFound:
- *          description: Le partier n'a pas été trouvé
+ *          description: Le partier n'a pas ï¿½tï¿½ trouvï¿½
  *      PartierIdNotANumber:
  *          description: L'id du partier n'est pas un nombre
  */
